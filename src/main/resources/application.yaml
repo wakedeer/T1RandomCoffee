@@ -1,0 +1,14 @@
+spring:
+  datasource:
+    driver-class-name: org.postgresql.Driver
+    url: 'jdbc:postgresql://localhost:5432/random_coffee'
+    username: 'random'
+    password: 'coffee2022!'
+  jpa:
+    properties:
+      hibernate.dialect: org.hibernate.dialect.PostgreSQLDialect
+      hibernate.globally_quoted_identifiers: true
+
+telegram:
+  name: 'InnotechRandomCoffee'
+  adminId: 203918552

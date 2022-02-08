@@ -1,0 +1,64 @@
+databaseChangeLog:
+  - changeSet:
+      id: 1.0.0-init-db
+      author: amironov
+      changes:
+        - createTable:
+            tableName: USERS
+            columns:
+              - column:
+                  name: USER_ID
+                  type: bigint
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: CHAT_ID
+                  type: bigint
+                  constraints:
+                    unique: true
+                    nullable: false
+              - column:
+                  name: STATUS
+                  type: varchar(20)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: FULL_NAME
+                  type: varchar(255)
+                  constraints:
+                    nullable: true
+              - column:
+                  name: PROFILE_URL
+                  type: varchar(70)
+                  constraints:
+                    nullable: true
+              - column:
+                  name: CITY
+                  type: varchar(255)
+                  constraints:
+                    nullable: true
+              - column:
+                  name: ACTIVE
+                  type: boolean
+                  constraints:
+                    nullable: false
+        - createTable:
+            tableName: MEETINGS
+            columns:
+              - column:
+                  name: ID
+                  type: serial
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: USER_ID_1
+                  type: bigint
+                  constraints:
+                    nullable: false
+              - column:
+                  name: USER_ID_2
+                  type: bigint
+                  constraints:
+                    nullable: false
