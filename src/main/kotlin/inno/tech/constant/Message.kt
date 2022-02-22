@@ -1,5 +1,8 @@
 package inno.tech.constant
 
+/**
+ * Шаблоны сообщений.
+ */
 object Message {
 
     val WELCOME: String = loadTemplate("/message/welcome.md")

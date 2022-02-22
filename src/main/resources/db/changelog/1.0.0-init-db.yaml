@@ -25,17 +25,22 @@ databaseChangeLog:
                     nullable: false
               - column:
                   name: FULL_NAME
-                  type: varchar(255)
+                  type: text
+                  constraints:
+                    nullable: true
+              - column:
+                  name: USERNAME
+                  type: text
                   constraints:
                     nullable: true
               - column:
                   name: PROFILE_URL
-                  type: varchar(70)
+                  type: text
                   constraints:
                     nullable: true
               - column:
                   name: CITY
-                  type: varchar(255)
+                  type: text
                   constraints:
                     nullable: true
               - column:

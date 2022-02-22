@@ -12,3 +12,7 @@ spring:
 telegram:
   name: 'InnotechRandomCoffee'
   adminId: 203918552
+
+schedule:
+  suggest: '0 0 12 * * SUN'
+  match: '0 0 12 * * MON'

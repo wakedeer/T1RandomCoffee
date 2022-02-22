@@ -19,6 +19,9 @@ class User(
     @Column(name = "FULL_NAME")
     var fullName: String? = null,
 
+    @Column(name = "USERNAME")
+    var username: String? = null,
+
     @Column(name = "CITY")
     var city: String? = null,
 

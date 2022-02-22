@@ -1,0 +1,9 @@
+{
+  "properties": [
+    {
+      "name": "schedule.match",
+      "type": "java.lang.String",
+      "description": "Time to match pair."
+    }
+  ]
+}

@@ -30,6 +30,9 @@ dependencies {
     implementation("org.jetbrains.kotlin:kotlin-reflect")
     implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
 
+    //logging
+    implementation("io.github.microutils:kotlin-logging-jvm")
+
     //test
     testImplementation("org.springframework.boot:spring-boot-starter-test")
 }
@@ -37,6 +40,7 @@ dependencies {
 dependencyManagement {
     dependencies {
         dependency("org.telegram:telegrambots-spring-boot-starter:5.7.1")
+        dependency("io.github.microutils:kotlin-logging-jvm:2.1.20")
     }
 }
 

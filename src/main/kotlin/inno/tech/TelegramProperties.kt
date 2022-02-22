@@ -10,7 +10,7 @@ import org.springframework.boot.context.properties.ConstructorBinding
  */
 @ConfigurationProperties("telegram")
 @ConstructorBinding
-data class TelegramConfig(
+data class TelegramProperties(
     val name: String,
     val token: String,
     val adminId: Long,
