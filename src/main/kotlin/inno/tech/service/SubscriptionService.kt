@@ -87,7 +87,7 @@ class SubscriptionService(
 
     private fun sendIndentation(user: User, partner: User) {
         val matchMessage = SendMessage()
-        val username = if (partner.username.isNullOrBlank()) partner.username else partner.profileUrl
+        val username = if (partner.username.isNullOrBlank()) partner.profileUrl else "@${partner.username}"
 
         matchMessage.text =
             MessageFormat.format(Message.MATCH_INVITATION,
@@ -105,7 +105,7 @@ class SubscriptionService(
     private fun contactPartnerBtn(partner: User): InlineKeyboardMarkup {
         val contactPartner = InlineKeyboardButton().apply {
             text = "Telegram ${partner.fullName}"
-            url = "href=\"tg://user?id=${partner.userId}"
+            url = "tg://user?id=${partner.userId}"
         }
         return InlineKeyboardMarkup().apply {
             keyboard = listOf(
