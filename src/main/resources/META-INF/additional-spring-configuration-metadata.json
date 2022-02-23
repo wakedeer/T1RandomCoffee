@@ -4,6 +4,11 @@
       "name": "schedule.match",
       "type": "java.lang.String",
       "description": "Time to match pair."
+    },
+    {
+      "name": "schedule.suggest",
+      "type": "java.lang.String",
+      "description": "Time to ask about participation."
     }
   ]
 }
