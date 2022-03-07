@@ -3,3 +3,6 @@ spring:
 
 schedule:
   match: '0 * * * * *'
+
+telegram:
+  name: 'InnotechRandomCoffeeTestBot'
