@@ -13,6 +13,7 @@ telegram:
   name: 'InnotechRandomCoffee'
   adminId: 203918552
 
+# UTC time by default
 schedule:
-  suggest: '0 0 12 * * SUN'
-  match: '0 0 12 * * MON'
+  suggest: '0 0 7 * * SUN'
+  match: '0 0 7 * * MON'
