@@ -39,8 +39,8 @@ class SubscriptionService(
             val meeting = Meeting(userId1 = firstUser.userId, userId2 = secondUser.userId)
             meetingRepository.save(meeting)
 
-            sendIndentation(firstUser, secondUser)
-            sendIndentation(secondUser, firstUser)
+            sendInvention(firstUser, secondUser)
+            sendInvention(secondUser, firstUser)
         }
 
         // set unscheduled status for other
@@ -85,7 +85,7 @@ class SubscriptionService(
         }
     }
 
-    private fun sendIndentation(user: User, partner: User) {
+    private fun sendInvention(user: User, partner: User) {
         val matchMessage = SendMessage()
         val username = if (partner.username.isNullOrBlank()) partner.profileUrl else "@${partner.username}"
 
