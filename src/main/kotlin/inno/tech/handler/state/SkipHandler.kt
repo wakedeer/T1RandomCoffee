@@ -7,6 +7,7 @@ import inno.tech.constant.Status
 import inno.tech.exception.RandomCoffeeBotException
 import inno.tech.handler.Handler
 import inno.tech.model.User
+import inno.tech.repository.UserRepository
 import org.springframework.stereotype.Component
 import org.telegram.telegrambots.meta.api.methods.ParseMode
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage
@@ -25,6 +26,8 @@ class SkipHandler(
         if (user == null) {
             throw RandomCoffeeBotException("user cannot be null")
         }
+
+        user.status = Status.UNSCHEDULED
 
         val skipReply = SendMessage()
         skipReply.text = Message.MATCH_SKIP

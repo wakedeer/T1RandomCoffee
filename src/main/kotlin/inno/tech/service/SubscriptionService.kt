@@ -8,6 +8,7 @@ import inno.tech.model.Meeting
 import inno.tech.model.User
 import inno.tech.repository.MeetingRepository
 import inno.tech.repository.UserRepository
+import mu.KotlinLogging
 import org.springframework.scheduling.annotation.Scheduled
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
@@ -24,24 +25,25 @@ class SubscriptionService(
     private val meetingRepository: MeetingRepository,
 ) {
 
+    /** Logger. */
+    private val log = KotlinLogging.logger {}
+
     @Transactional
     @Scheduled(cron = "\${schedule.match}")
     fun matchPairs() {
-        val users = userRepository.findAllByStatusAndActiveTrue(Status.UNSCHEDULED)
+        val users = userRepository.findAllByStatusAndActiveTrue(Status.SCHEDULED)
 
         var collisionCount = 0
         while (users.count() > 1) {
-            val userIndexes = 0 until users.count()
-            val firstUserIndex = userIndexes.random()
-            val secondUserIndex = userIndexes.filter { it == firstUserIndex }.random()
+            val (firstUserIndex, secondUserIndex) = findIndexes(0 until users.count())
 
             val firstUser = users[firstUserIndex]
             val secondUser = users[secondUserIndex]
 
             if (meetingRepository.existsMeeting(firstUser.userId, secondUser.userId)) {
                 if (collisionCount >= MAX_ATTEMPT) {
-                    sendFailure(firstUser, PARTNER_NOT_FOUNT_MSG)
-                    sendFailure(secondUser, PARTNER_NOT_FOUNT_MSG)
+                    sendFailure(firstUser, PAIR_CANNOT_MATCH_DUE_TO_COLLISION_MSG)
+                    sendFailure(secondUser, PAIR_CANNOT_MATCH_DUE_TO_COLLISION_MSG)
                 } else {
                     collisionCount++
                     continue
@@ -54,36 +56,52 @@ class SubscriptionService(
                 sendInvention(secondUser, firstUser)
             }
 
+            firstUser.status = Status.UNSCHEDULED
+            secondUser.status = Status.UNSCHEDULED
+
             collisionCount = 0
-            users.removeAt(firstUserIndex)
-            users.removeAt(secondUserIndex)
+            users.remove(firstUser)
+            users.remove(secondUser)
         }
 
         // set unscheduled status for other
         users.forEach { u: User ->
-            sendFailure(u, LAST_ODD_USER_MSG)
+            sendFailure(u, PAIR_CANNOT_MATCH_DUE_TO_ONN_COUNT_MSG)
             u.status = Status.UNSCHEDULED
-            userRepository.save(u)
         }
     }
 
     @Transactional
     @Scheduled(cron = "\${schedule.suggest}")
     fun sendSuggestions() {
-        val users = userRepository.findAllByStatusInAndActiveTrue(listOf(Status.SCHEDULED, Status.UNSCHEDULED))
-        users.forEach { u: User ->
-            u.status = Status.ASKED
-            userRepository.save(u)
+        val users = userRepository.findAllByStatusInAndActiveTrue(listOf(Status.ASKED, Status.UNSCHEDULED))
+        users.forEach { user: User ->
+            user.status = Status.ASKED
 
             val participationQuestion = SendMessage()
             participationQuestion.text = Message.MATCH_SUGGESTION
             participationQuestion.parseMode = ParseMode.MARKDOWN
-            participationQuestion.chatId = u.chatId.toString()
+            participationQuestion.chatId = user.chatId.toString()
             participationQuestion.replyMarkup = partQuestion()
             participationQuestion.allowSendingWithoutReply = false
 
-            telegramBotApi.execute(participationQuestion)
+            try {
+                telegramBotApi.execute(participationQuestion)
+            } catch (ex: Exception) {
+                log.error("Sending a request. Error occurred with user ${user.userId} ", ex)
+            }
         }
+    }
+
+    private fun findIndexes(userIndexes: IntRange): Pair<Int, Int> {
+        var firstUserIndex: Int
+        var secondUserIndex: Int
+        do {
+            firstUserIndex = userIndexes.random()
+            secondUserIndex = userIndexes.random()
+        } while (firstUserIndex == secondUserIndex)
+
+        return Pair(firstUserIndex, secondUserIndex)
     }
 
     private fun partQuestion(): InlineKeyboardMarkup {
@@ -116,7 +134,11 @@ class SubscriptionService(
         matchMessage.chatId = user.userId.toString()
         matchMessage.replyMarkup = contactPartnerBtn(partner)
 
-        telegramBotApi.execute(matchMessage)
+        try {
+            telegramBotApi.execute(matchMessage)
+        } catch (ex: Exception) {
+            log.error("Sending an invitation. Error occurred with user ${user.userId} ", ex)
+        }
     }
 
     private fun sendFailure(user: User, reason: String) {
@@ -126,7 +148,11 @@ class SubscriptionService(
         failureMessage.parseMode = ParseMode.MARKDOWN
         failureMessage.chatId = user.userId.toString()
 
-        telegramBotApi.execute(failureMessage)
+        try {
+            telegramBotApi.execute(failureMessage)
+        } catch (ex: Exception) {
+            log.error("Sending a cause of invitation failure. Error occurred with user ${user.userId} ", ex)
+        }
     }
 
     private fun contactPartnerBtn(partner: User): InlineKeyboardMarkup {
@@ -142,11 +168,16 @@ class SubscriptionService(
     }
 
     companion object {
+
         /** Количество попыток решить коллизию участников встречи. */
         const val MAX_ATTEMPT = 10
 
-        const val PARTNER_NOT_FOUNT_MSG = "мы не смогли найти тебе нового партнёра для встречи"
+        private const val BOT_URL = "https://t.me/InnotechRandomCoffeeBot"
 
-        const val LAST_ODD_USER_MSG = "количество участников встречи нечётное"
+        const val PAIR_CANNOT_MATCH_DUE_TO_COLLISION_MSG = "Кажется, ты встретился со всеми участниками \uD83D\uDC4D" +
+                " Продолжай в том же духе и не забывай приглашать коллег $BOT_URL \uD83D\uDE4C"
+
+        const val PAIR_CANNOT_MATCH_DUE_TO_ONN_COUNT_MSG =
+            "В этот раз количество участников Random Coffee оказалось нечётное."
     }
 }

@@ -9,7 +9,6 @@ import inno.tech.extension.getMessageText
 import inno.tech.extension.getUserId
 import inno.tech.handler.Handler
 import inno.tech.model.User
-import inno.tech.repository.UserRepository
 import org.springframework.stereotype.Component
 import org.telegram.telegrambots.meta.api.methods.ParseMode
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage
@@ -20,7 +19,6 @@ import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKe
 @Component
 class FillProfileHandle(
     private val telegramBotApi: TelegramBotApi,
-    private val userRepository: UserRepository,
 ) : Handler {
 
     override fun accept(command: String, user: User?): Boolean {
@@ -55,7 +53,6 @@ class FillProfileHandle(
         }
 
         user.status = REGISTRATION_STATUS_ORDER[REGISTRATION_STATUS_ORDER.indexOf(user.status) + 1]
-        userRepository.save(user)
 
         question.parseMode = ParseMode.MARKDOWN
         question.chatId = update.getChatIdAsString()

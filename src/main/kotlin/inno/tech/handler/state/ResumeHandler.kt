@@ -15,7 +15,6 @@ import org.telegram.telegrambots.meta.api.objects.Update
 @Component
 class ResumeHandler(
     private val telegramBotApi: TelegramBotApi,
-    private val userRepository: UserRepository,
 ) : Handler {
 
     override fun accept(command: String, user: User?): Boolean {
@@ -28,7 +27,6 @@ class ResumeHandler(
         }
 
         user.active = true
-        userRepository.save(user)
 
         val resumeResponse = SendMessage()
         resumeResponse.text = Message.STATUS_RESUME

@@ -26,7 +26,7 @@ class ReadyHandler(
             throw RandomCoffeeBotException("user cannot be null")
         }
 
-        user.status = Status.UNSCHEDULED
+        user.status = Status.SCHEDULED
 
         val pauseReply = SendMessage()
         pauseReply.text = Message.MATCH_SUCCESS
