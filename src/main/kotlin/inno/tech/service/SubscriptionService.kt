@@ -29,22 +29,39 @@ class SubscriptionService(
     fun matchPairs() {
         val users = userRepository.findAllByStatusAndActiveTrue(Status.UNSCHEDULED)
 
+        var collisionCount = 0
         while (users.count() > 1) {
-            val firstUserIndex = (0 until users.count()).random()
-            val firstUser = users.removeAt(firstUserIndex)
+            val userIndexes = 0 until users.count()
+            val firstUserIndex = userIndexes.random()
+            val secondUserIndex = userIndexes.filter { it == firstUserIndex }.random()
 
-            val secondUserIndex = (0 until users.count()).random()
-            val secondUser = users.removeAt(secondUserIndex)
+            val firstUser = users[firstUserIndex]
+            val secondUser = users[secondUserIndex]
 
-            val meeting = Meeting(userId1 = firstUser.userId, userId2 = secondUser.userId)
-            meetingRepository.save(meeting)
+            if (meetingRepository.existsMeeting(firstUser.userId, secondUser.userId)) {
+                if (collisionCount >= MAX_ATTEMPT) {
+                    sendFailure(firstUser, PARTNER_NOT_FOUNT_MSG)
+                    sendFailure(secondUser, PARTNER_NOT_FOUNT_MSG)
+                } else {
+                    collisionCount++
+                    continue
+                }
+            } else {
+                val meeting = Meeting(userId1 = firstUser.userId, userId2 = secondUser.userId)
+                meetingRepository.save(meeting)
 
-            sendInvention(firstUser, secondUser)
-            sendInvention(secondUser, firstUser)
+                sendInvention(firstUser, secondUser)
+                sendInvention(secondUser, firstUser)
+            }
+
+            collisionCount = 0
+            users.removeAt(firstUserIndex)
+            users.removeAt(secondUserIndex)
         }
 
         // set unscheduled status for other
         users.forEach { u: User ->
+            sendFailure(u, LAST_ODD_USER_MSG)
             u.status = Status.UNSCHEDULED
             userRepository.save(u)
         }
@@ -102,6 +119,16 @@ class SubscriptionService(
         telegramBotApi.execute(matchMessage)
     }
 
+    private fun sendFailure(user: User, reason: String) {
+        val failureMessage = SendMessage()
+
+        failureMessage.text = MessageFormat.format(Message.MATCH_FAILURE, reason)
+        failureMessage.parseMode = ParseMode.MARKDOWN
+        failureMessage.chatId = user.userId.toString()
+
+        telegramBotApi.execute(failureMessage)
+    }
+
     private fun contactPartnerBtn(partner: User): InlineKeyboardMarkup {
         val contactPartner = InlineKeyboardButton().apply {
             text = "Telegram ${partner.fullName}"
@@ -112,5 +139,14 @@ class SubscriptionService(
                 listOf(contactPartner),
             )
         }
+    }
+
+    companion object {
+        /** Количество попыток решить коллизию участников встречи. */
+        const val MAX_ATTEMPT = 10
+
+        const val PARTNER_NOT_FOUNT_MSG = "мы не смогли найти тебе нового партнёра для встречи"
+
+        const val LAST_ODD_USER_MSG = "количество участников встречи нечётное"
     }
 }

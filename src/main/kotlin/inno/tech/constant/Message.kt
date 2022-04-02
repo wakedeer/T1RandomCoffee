@@ -19,6 +19,7 @@ object Message {
     val MATCH_SKIP: String = loadTemplate("/message/match/skip.md")
     val MATCH_SUGGESTION: String = loadTemplate("/message/match/suggestion.md")
     val MATCH_SUCCESS: String = loadTemplate("/message/match/success.md")
+    val MATCH_FAILURE: String = loadTemplate("/message/match/failure.md")
 
     val STATUS_PAUSE: String = loadTemplate("/message/status/pause.md")
     val STATUS_RESUME: String = loadTemplate("/message/status/resume.md")
