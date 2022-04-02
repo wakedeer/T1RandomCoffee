@@ -68,7 +68,7 @@ class FillProfileHandle(
             Status.REG_PROFILE_URL,
         )
 
-        val REGISTRATION_STATUS_ORDER = INTERMEDIATE_REGISTRATION_STATUSES + Status.UNSCHEDULED
+        val REGISTRATION_STATUS_ORDER = INTERMEDIATE_REGISTRATION_STATUSES + Status.SCHEDULED
 
         val CITIES = chooseCityBtn()
 
