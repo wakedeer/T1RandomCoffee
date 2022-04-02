@@ -4,6 +4,7 @@ import inno.tech.TelegramBotApi
 import inno.tech.constant.Command
 import inno.tech.constant.Message
 import inno.tech.constant.Status
+import inno.tech.handler.other.ShowProfileHandler.Companion.NOT_DEFINED
 import inno.tech.model.Meeting
 import inno.tech.model.User
 import inno.tech.repository.MeetingRepository
@@ -122,14 +123,12 @@ class SubscriptionService(
 
     private fun sendInvention(user: User, partner: User) {
         val matchMessage = SendMessage()
-        val username = if (partner.username.isNullOrBlank()) partner.profileUrl else "@${partner.username}"
 
-        matchMessage.text =
-            MessageFormat.format(Message.MATCH_INVITATION,
-                partner.fullName,
-                partner.city,
-                partner.profileUrl,
-                username)
+        val profileUrl = partner.profileUrl ?: NOT_DEFINED
+        val fullName = partner.fullName ?: NOT_DEFINED
+        val city = partner.city ?: NOT_DEFINED
+
+        matchMessage.text = MessageFormat.format(Message.MATCH_INVITATION, fullName, city, profileUrl)
         matchMessage.parseMode = ParseMode.MARKDOWN
         matchMessage.chatId = user.userId.toString()
         matchMessage.replyMarkup = contactPartnerBtn(partner)

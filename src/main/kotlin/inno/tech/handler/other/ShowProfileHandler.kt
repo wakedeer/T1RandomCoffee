@@ -26,10 +26,19 @@ class ShowProfileHandler(
             throw RandomCoffeeBotException("user cannot be null")
         }
 
+        val fullName = user.fullName ?: NOT_DEFINED
+        val city = user.city ?: NOT_DEFINED
+        val profileUrl = user.profileUrl ?: NOT_DEFINED
+
         val showProfileReply = SendMessage()
-        showProfileReply.text = MessageFormat.format(Message.PROFILE, user.fullName, user.city, user.profileUrl)
+        showProfileReply.text = MessageFormat.format(Message.PROFILE, fullName, city, profileUrl)
         showProfileReply.parseMode = ParseMode.MARKDOWN
         showProfileReply.chatId = user.chatId.toString()
         telegramBotApi.execute(showProfileReply)
+    }
+
+    companion object {
+
+        const val NOT_DEFINED = "Не определено"
     }
 }
