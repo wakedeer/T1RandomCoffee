@@ -54,3 +54,8 @@ tasks.withType<KotlinCompile> {
 tasks.withType<Test> {
     useJUnitPlatform()
 }
+
+//disable building plain archive at all
+tasks.named<Jar>("jar") {
+    enabled = false
+}
