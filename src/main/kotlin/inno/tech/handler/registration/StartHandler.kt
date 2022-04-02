@@ -54,7 +54,9 @@ class StartHandler(
         nameQuestion.chatId = chatId.toString()
         nameQuestion.allowSendingWithoutReply = false
 
-        val fullName = update.message?.from?.firstName + " " + update.message?.from?.lastName
+        val firstName = update.message?.from?.firstName?.let { "$it " } ?: ""
+        val lastName = update.message?.from?.lastName ?: ""
+        val fullName = firstName + lastName
         val resumeBtn = InlineKeyboardButton().apply {
             text = fullName
             callbackData = fullName
