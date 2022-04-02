@@ -9,7 +9,7 @@ plugins {
 }
 
 group = "inno.tech"
-version = "0.1.1"
+version = "0.1.3"
 java.sourceCompatibility = JavaVersion.VERSION_11
 
 repositories {
