@@ -12,11 +12,17 @@ import org.telegram.telegrambots.meta.api.objects.Update
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKeyboardButton
 
+/**
+ * Компонент, предоставляющий доступ к Telegram Bot API
+ *
+ * @param telegramProperties конфигурации подключения к Telegram Bot API
+ */
 @Component
 class TelegramBotApi(
     private val telegramProperties: TelegramProperties,
 ) : TelegramLongPollingBot() {
 
+    /** Обработчик входящий сообщений. (Lazy для избежания рекурсивной зависимости) */
     @Lazy
     @Autowired
     private lateinit var messageHandler: MessageHandler
@@ -29,6 +35,9 @@ class TelegramBotApi(
         messageHandler.handle(update)
     }
 
+    /**
+     * Отправляет главное меню бота, если обработчик сообщения не найден.
+     */
     fun errorSend(chatId: Long) {
         val response = SendMessage()
         response.text = Message.ERROR

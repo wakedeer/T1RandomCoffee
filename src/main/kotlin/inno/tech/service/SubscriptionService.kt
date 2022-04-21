@@ -19,6 +19,12 @@ import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMa
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKeyboardButton
 import java.text.MessageFormat
 
+/**
+ * Сервис для рассылки уведомлений пользователем по расписанию.
+ * @param userRepository репозиторий для работы с информацией о пользователе
+ * @param telegramBotApi компонент, предоставляющий доступ к Telegram Bot API
+ * @param meetingRepository репозиторий для работы с информацией о встречах
+ */
 @Service
 class SubscriptionService(
     private val userRepository: UserRepository,
@@ -171,6 +177,7 @@ class SubscriptionService(
         /** Количество попыток решить коллизию участников встречи. */
         const val MAX_ATTEMPT = 10
 
+        /** URL Random Coffee бота. */
         private const val BOT_URL = "https://t.me/InnotechRandomCoffeeBot"
 
         const val PAIR_CANNOT_MATCH_DUE_TO_COLLISION_MSG = "Кажется, ты встретился со всеми участниками \uD83D\uDC4D" +

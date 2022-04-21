@@ -18,6 +18,12 @@ import org.telegram.telegrambots.meta.api.objects.Update
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKeyboardButton
 
+/**
+ * Обработчик регистрации/перерегистрации пользователя.
+ *
+ * @param telegramBotApi компонент, предоставляющий доступ к Telegram Bot API
+ * @param userRepository репозиторий для работы с информацией о пользователе
+ */
 @Order(Ordered.HIGHEST_PRECEDENCE)
 @Component
 class StartHandler(

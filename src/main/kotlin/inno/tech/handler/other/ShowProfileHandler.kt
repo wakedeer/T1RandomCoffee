@@ -12,6 +12,11 @@ import org.telegram.telegrambots.meta.api.methods.send.SendMessage
 import org.telegram.telegrambots.meta.api.objects.Update
 import java.text.MessageFormat
 
+/**
+ * Обработчик запроса информации о профиле пользователя.
+ *
+ * @param telegramBotApi компонент, предоставляющий доступ к Telegram Bot API
+ */
 @Component
 class ShowProfileHandler(
     private val telegramBotApi: TelegramBotApi,

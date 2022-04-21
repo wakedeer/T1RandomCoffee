@@ -4,9 +4,10 @@ import org.springframework.boot.context.properties.ConfigurationProperties
 import org.springframework.boot.context.properties.ConstructorBinding
 
 /**
- * Конфигурация подключения к Telegram.
- *
- * @author Aleksei Mironov
+ * Конфигурации подключения к Telegram Bot API.
+ * @param name имя бота
+ * @param token токен
+ * @param adminId идентификатор администратора
  */
 @ConfigurationProperties("telegram")
 @ConstructorBinding

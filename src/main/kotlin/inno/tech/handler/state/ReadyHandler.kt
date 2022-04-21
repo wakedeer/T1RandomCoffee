@@ -12,6 +12,11 @@ import org.telegram.telegrambots.meta.api.methods.ParseMode
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage
 import org.telegram.telegrambots.meta.api.objects.Update
 
+/**
+ * Обработчик сообщения о готовности участвовать в жеребьёвке.
+ *
+ * @param telegramBotApi компонент, предоставляющий доступ к Telegram Bot API
+ */
 @Component
 class ReadyHandler(
     private val telegramBotApi: TelegramBotApi,

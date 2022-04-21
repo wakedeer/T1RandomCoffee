@@ -5,7 +5,7 @@ import org.springframework.transaction.annotation.Transactional
 import org.telegram.telegrambots.meta.api.objects.Update
 
 /**
- * Обработчик команд пользователя.
+ * Обработчик команд.
  */
 interface Handler {
 

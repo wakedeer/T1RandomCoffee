@@ -16,6 +16,11 @@ import org.telegram.telegrambots.meta.api.objects.Update
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKeyboardButton
 
+/**
+ * Обработчик сообщений заполнения профиля пользователя.
+ *
+ * @param telegramBotApi компонент, предоставляющий доступ к Telegram Bot API
+ */
 @Component
 class FillProfileHandle(
     private val telegramBotApi: TelegramBotApi,

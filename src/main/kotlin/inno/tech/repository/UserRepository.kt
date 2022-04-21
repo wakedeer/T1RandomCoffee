@@ -10,7 +10,17 @@ import java.util.*
  */
 interface UserRepository : CrudRepository<User, Long> {
 
+    /**
+     * Возвращает список активных пользователей, имеющих статус входящий в список искомых
+     * @param statuses список статусов для поиска
+     * @return список активных пользователей
+     */
     fun findAllByStatusInAndActiveTrue(statuses: Collection<Status>): LinkedList<User>
 
+    /**
+     * Возвращает список активных пользователей с определённым статусом
+     * @param status статус
+     * @return список активных пользователей
+     */
     fun findAllByStatusAndActiveTrue(status: Status): LinkedList<User>
 }

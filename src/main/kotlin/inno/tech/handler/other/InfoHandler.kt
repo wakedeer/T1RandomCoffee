@@ -11,6 +11,11 @@ import org.telegram.telegrambots.meta.api.methods.ParseMode
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage
 import org.telegram.telegrambots.meta.api.objects.Update
 
+/**
+ * Обработчик запроса информации о приложении.
+ *
+ * @param telegramBotApi компонент, предоставляющий доступ к Telegram Bot API
+ */
 @Component
 class InfoHandler(
     private val telegramBotApi: TelegramBotApi,

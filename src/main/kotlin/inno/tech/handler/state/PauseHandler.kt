@@ -11,6 +11,11 @@ import org.telegram.telegrambots.meta.api.methods.ParseMode
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage
 import org.telegram.telegrambots.meta.api.objects.Update
 
+/**
+ * Обработчик приостановки пользователем получений сообщений от бота.
+ *
+ * @param telegramBotApi компонент, предоставляющий доступ к Telegram Bot API
+ */
 @Component
 class PauseHandler(
     private val telegramBotApi: TelegramBotApi,
