@@ -9,6 +9,16 @@
       "name": "schedule.suggest",
       "type": "java.lang.String",
       "description": "Time to ask about participation."
+    },
+    {
+      "name": "telegram.name",
+      "type": "java.lang.String",
+      "description": "Bot name."
+    },
+    {
+      "name": "telegram.adminId",
+      "type": "java.lang.String",
+      "description": "Admin id."
     }
   ]
 }
