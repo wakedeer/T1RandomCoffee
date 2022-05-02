@@ -32,7 +32,7 @@ class SkipHandler(
             throw RandomCoffeeBotException("user cannot be null")
         }
 
-        user.status = Status.UNSCHEDULED
+        user.status = Status.SKIP
 
         val skipReply = SendMessage()
         skipReply.text = Message.MATCH_SKIP

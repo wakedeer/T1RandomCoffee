@@ -1,6 +1,7 @@
 package inno.tech.model
 
 import inno.tech.constant.Status
+import java.time.LocalDateTime
 import javax.persistence.*
 
 /**
@@ -35,12 +36,21 @@ class User(
     @Column(name = "PROFILE_URL")
     var profileUrl: String? = null,
 
-    /** Статус пользователя*/
+    /** Текущий статус пользователя */
     @Enumerated(EnumType.STRING)
     @Column(name = "STATUS")
     var status: Status,
 
+    /** Предыдущий статус пользователя */
+    @Enumerated(EnumType.STRING)
+    @Column(name = "PREVIOUS_STATUS")
+    var previousStatus: Status? = null,
+
     /** Постановка бота на паузу */
     @Column(name = "ACTIVE")
     var active: Boolean = false,
+
+    /** Дата регистрации пользователя */
+    @Column(name = "REG_DATE")
+    var regDate: LocalDateTime = LocalDateTime.now(),
 )

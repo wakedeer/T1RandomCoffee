@@ -38,7 +38,7 @@ class SubscriptionService(
     @Transactional
     @Scheduled(cron = "\${schedule.match}")
     fun matchPairs() {
-        val users = userRepository.findAllByStatusAndActiveTrue(Status.SCHEDULED)
+        val users = userRepository.findAllByStatusAndActiveTrue(Status.READY)
 
         var collisionCount = 0
         while (users.count() > 1) {
@@ -48,23 +48,18 @@ class SubscriptionService(
             val secondUser = users[secondUserIndex]
 
             if (meetingRepository.existsMeeting(firstUser.userId, secondUser.userId)) {
-                if (collisionCount >= MAX_ATTEMPT) {
-                    sendFailure(firstUser, PAIR_CANNOT_MATCH_DUE_TO_COLLISION_MSG)
-                    sendFailure(secondUser, PAIR_CANNOT_MATCH_DUE_TO_COLLISION_MSG)
+                if (collisionCount > MAX_ATTEMPT) {
+                    sendFailure(firstUser, Message.MATCH_FAILURE)
+                    sendFailure(secondUser, Message.MATCH_FAILURE)
+                    firstUser.status = Status.UNPAIRED
+                    secondUser.status = Status.UNPAIRED
                 } else {
                     collisionCount++
                     continue
                 }
             } else {
-                val meeting = Meeting(userId1 = firstUser.userId, userId2 = secondUser.userId)
-                meetingRepository.save(meeting)
-
-                sendInvention(firstUser, secondUser)
-                sendInvention(secondUser, firstUser)
+                sendInvitation(firstUser, secondUser)
             }
-
-            firstUser.status = Status.UNSCHEDULED
-            secondUser.status = Status.UNSCHEDULED
 
             collisionCount = 0
             users.remove(firstUser)
@@ -73,15 +68,26 @@ class SubscriptionService(
 
         // set unscheduled status for other
         users.forEach { u: User ->
-            sendFailure(u, PAIR_CANNOT_MATCH_DUE_TO_ONN_COUNT_MSG)
-            u.status = Status.UNSCHEDULED
+            sendFailure(u, Message.MATCH_FAILURE_ODD)
+            u.status = Status.UNPAIRED
         }
+    }
+
+    fun sendInvitation(firstUser: User, secondUser: User) {
+        val meeting = Meeting(userId1 = firstUser.userId, userId2 = secondUser.userId)
+        meetingRepository.save(meeting)
+
+        sendInventionMessage(firstUser, secondUser)
+        sendInventionMessage(secondUser, firstUser)
+        firstUser.status = Status.MATCHED
+        secondUser.status = Status.MATCHED
     }
 
     @Transactional
     @Scheduled(cron = "\${schedule.suggest}")
     fun sendSuggestions() {
-        val users = userRepository.findAllByStatusInAndActiveTrue(listOf(Status.ASKED, Status.UNSCHEDULED))
+        val sendSuggestionStatuses = listOf(Status.MATCHED, Status.ASKED, Status.UNPAIRED, Status.SKIP)
+        val users = userRepository.findAllByStatusInAndActiveTrue(sendSuggestionStatuses)
         users.forEach { user: User ->
             user.status = Status.ASKED
 
@@ -127,7 +133,7 @@ class SubscriptionService(
         }
     }
 
-    private fun sendInvention(user: User, partner: User) {
+    private fun sendInventionMessage(user: User, partner: User) {
         val matchMessage = SendMessage()
 
         val profileUrl = partner.profileUrl ?: NOT_DEFINED
@@ -149,7 +155,7 @@ class SubscriptionService(
     private fun sendFailure(user: User, reason: String) {
         val failureMessage = SendMessage()
 
-        failureMessage.text = MessageFormat.format(Message.MATCH_FAILURE, reason)
+        failureMessage.text = reason
         failureMessage.parseMode = ParseMode.MARKDOWN
         failureMessage.chatId = user.userId.toString()
 
@@ -176,14 +182,5 @@ class SubscriptionService(
 
         /** Количество попыток решить коллизию участников встречи. */
         const val MAX_ATTEMPT = 10
-
-        /** URL Random Coffee бота. */
-        private const val BOT_URL = "https://t.me/InnotechRandomCoffeeBot"
-
-        const val PAIR_CANNOT_MATCH_DUE_TO_COLLISION_MSG = "Кажется, ты встретился со всеми участниками \uD83D\uDC4D" +
-                " Продолжай в том же духе и не забывай приглашать коллег $BOT_URL \uD83D\uDE4C"
-
-        const val PAIR_CANNOT_MATCH_DUE_TO_ONN_COUNT_MSG =
-            "В этот раз количество участников Random Coffee оказалось нечётное."
     }
 }

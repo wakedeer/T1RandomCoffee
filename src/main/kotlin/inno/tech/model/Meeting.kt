@@ -1,5 +1,6 @@
 package inno.tech.model
 
+import java.time.LocalDateTime
 import javax.persistence.*
 
 /**
@@ -14,11 +15,15 @@ class Meeting(
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     var id: Long = 0,
 
-    /** Идентификатор первого участика */
+    /** Идентификатор первого участника */
     @Column(name = "USER_ID_1")
     var userId1: Long,
 
-    /** Идентификатор второго участика */
+    /** Идентификатор второго участника */
     @Column(name = "USER_ID_2")
     var userId2: Long,
+
+    /** Время создания записи (Время жеребьёвки) */
+    @Column(name = "MATCH_DATE")
+    var matchDate: LocalDateTime = LocalDateTime.now(),
 )

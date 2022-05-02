@@ -2,6 +2,7 @@ package inno.tech.handler.registration
 
 import inno.tech.TelegramBotApi
 import inno.tech.constant.Message
+import inno.tech.constant.REGISTRATION_STATUSES
 import inno.tech.constant.Status
 import inno.tech.exception.RandomCoffeeBotException
 import inno.tech.extension.getChatIdAsString
@@ -9,6 +10,8 @@ import inno.tech.extension.getMessageText
 import inno.tech.extension.getUserId
 import inno.tech.handler.Handler
 import inno.tech.model.User
+import inno.tech.repository.UserRepository
+import inno.tech.service.SubscriptionService
 import org.springframework.stereotype.Component
 import org.telegram.telegrambots.meta.api.methods.ParseMode
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage
@@ -24,10 +27,12 @@ import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKe
 @Component
 class FillProfileHandle(
     private val telegramBotApi: TelegramBotApi,
+    private val subscriptionService: SubscriptionService,
+    private val userRepository: UserRepository,
 ) : Handler {
 
     override fun accept(command: String, user: User?): Boolean {
-        return user != null && INTERMEDIATE_REGISTRATION_STATUSES.contains(user.status)
+        return user != null && REGISTRATION_STATUSES.contains(user.status)
     }
 
     override fun handle(update: Update, user: User?) {
@@ -35,21 +40,38 @@ class FillProfileHandle(
             throw RandomCoffeeBotException("Error user state for message $update")
         }
 
-        val question = SendMessage()
+        val message = SendMessage()
 
         when (user.status) {
             Status.REG_NAME -> {
                 user.fullName = update.getMessageText()
-                question.text = Message.REG_STEP_2
-                question.replyMarkup = CITIES
+                message.text = Message.REG_STEP_2
+                message.replyMarkup = CITIES
+                user.status = getNextStatus(user.status)
             }
             Status.REG_CITY -> {
                 user.city = update.getMessageText()
-                question.text = Message.REG_STEP_3
+                message.text = Message.REG_STEP_3
+                user.status = getNextStatus(user.status)
             }
             Status.REG_PROFILE_URL -> {
                 user.profileUrl = update.getMessageText()
-                question.text = Message.REG_SUCCESS
+                message.text = Message.REG_SUCCESS
+                val previousStatus = user.previousStatus
+                if (previousStatus != null) {
+                    //update profile
+                    user.status = previousStatus
+                } else {
+                    //new user
+                    val readyUser = userRepository.findAllByStatusAndActiveTrue(Status.READY).firstOrNull()
+                    if (readyUser != null) {
+                        sendMessage(message, update)
+                        subscriptionService.sendInvitation(readyUser, user)
+                        return
+                    } else {
+                        user.status = Status.READY
+                    }
+                }
             }
             else -> {
                 telegramBotApi.errorSend(update.getUserId())
@@ -57,23 +79,28 @@ class FillProfileHandle(
             }
         }
 
-        user.status = REGISTRATION_STATUS_ORDER[REGISTRATION_STATUS_ORDER.indexOf(user.status) + 1]
+        sendMessage(message, update)
+    }
 
+    private fun sendMessage(
+        question: SendMessage,
+        update: Update,
+    ) {
         question.parseMode = ParseMode.MARKDOWN
         question.chatId = update.getChatIdAsString()
         question.allowSendingWithoutReply = false
         telegramBotApi.execute(question)
     }
 
+    /**
+     * Возвращает следующий шаг регистрации.
+     * @param currentStatus текущий шаг регистрации
+     * @return следующий шаг регистрации
+     */
+    private fun getNextStatus(currentStatus: Status) =
+        REGISTRATION_STATUSES[REGISTRATION_STATUSES.indexOf(currentStatus) + 1]
+
     companion object {
-
-        val INTERMEDIATE_REGISTRATION_STATUSES = listOf(
-            Status.REG_NAME,
-            Status.REG_CITY,
-            Status.REG_PROFILE_URL,
-        )
-
-        val REGISTRATION_STATUS_ORDER = INTERMEDIATE_REGISTRATION_STATUSES + Status.SCHEDULED
 
         val CITIES = chooseCityBtn()
 

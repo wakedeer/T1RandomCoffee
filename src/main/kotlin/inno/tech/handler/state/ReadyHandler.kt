@@ -31,10 +31,10 @@ class ReadyHandler(
             throw RandomCoffeeBotException("user cannot be null")
         }
 
-        user.status = Status.SCHEDULED
+        user.status = Status.READY
 
         val pauseReply = SendMessage()
-        pauseReply.text = Message.MATCH_SUCCESS
+        pauseReply.text = Message.READY_TO_MATCH
         pauseReply.parseMode = ParseMode.MARKDOWN
         pauseReply.chatId = user.chatId.toString()
         telegramBotApi.execute(pauseReply)

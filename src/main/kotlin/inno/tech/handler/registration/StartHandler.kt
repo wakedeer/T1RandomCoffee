@@ -1,6 +1,7 @@
 package inno.tech.handler.registration
 
 import inno.tech.TelegramBotApi
+import inno.tech.constant.COMMON_STATUSES
 import inno.tech.constant.Command
 import inno.tech.constant.Message
 import inno.tech.constant.Status
@@ -44,15 +45,23 @@ class StartHandler(
         welcomeMsg.chatId = chatId.toString()
         telegramBotApi.execute(welcomeMsg)
 
-        val newUser = User(
-            userId = update.getUserId(),
-            chatId = chatId,
-            username = update.message?.from?.userName,
-            status = Status.REG_NAME,
-            active = true
-        )
+        val telegramUsername = update.message?.from?.userName
+        val u = if (user != null && user.status in COMMON_STATUSES) {
+            user.previousStatus = user.status
+            user.status = Status.REG_NAME
+            user.username = telegramUsername
+            user
+        } else {
+            User(
+                userId = update.getUserId(),
+                chatId = chatId,
+                username = telegramUsername,
+                status = Status.REG_NAME,
+                active = true,
+            )
+        }
 
-        userRepository.save(newUser)
+        userRepository.save(u)
 
         val nameQuestion = SendMessage()
         nameQuestion.text = Message.REG_STEP_1

@@ -1,0 +1,29 @@
+databaseChangeLog:
+  - changeSet:
+      id: 1.0.0-init-db
+      author: amironov
+      changes:
+        - addColumn:
+            tableName: USERS
+            columns:
+              - column:
+                  name: REG_DATE
+                  type: timestamp
+              - column:
+                  name: PREVIOUS_STATUS
+                  type: varchar(20)
+        - sql:
+            sql: "update users set reg_date = '2022-05-01 00:00:00' where status in ('UNSCHEDULED', 'SCHEDULED', 'ASKED')"
+        - sql:
+            sql: "update users set status = 'MATCHED' where status = 'UNSCHEDULED'"
+        - sql:
+            sql: "update users set status = 'READY' where status = 'SCHEDULED'"
+        - addColumn:
+            tableName: MEETINGS
+            columns:
+              - column:
+                  name: MATCH_DATE
+                  type: timestamp
+                  defaultValueComputed: now()
+                  constraints:
+                    nullable: false

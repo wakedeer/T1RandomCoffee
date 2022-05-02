@@ -1,6 +1,7 @@
 package inno.tech.extension
 
 import org.telegram.telegrambots.meta.api.objects.Update
+import java.util.Optional
 
 /**
  * Возвращает идентификатор чата из входного сообщения.
@@ -74,3 +75,10 @@ fun Update.getMessageTextOrNull(): String? {
 fun Update.getMessageText(): String {
     return getMessageTextOrNull() ?: throw IllegalArgumentException("Cannot get text from message: $this")
 }
+
+/**
+ * Конвертирует Java Optional в Kotlin Nullable.
+ *
+ * @return Kotlin Nullable значение
+ */
+fun <T : Any> Optional<T>.toNullable(): T? = this.orElse(null);
