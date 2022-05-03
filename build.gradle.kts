@@ -9,7 +9,7 @@ plugins {
 }
 
 group = "inno.tech"
-version = "0.1.3"
+version = "0.2.0"
 java.sourceCompatibility = JavaVersion.VERSION_11
 
 repositories {
@@ -58,4 +58,9 @@ tasks.withType<Test> {
 //disable building plain archive at all
 tasks.named<Jar>("jar") {
     enabled = false
+}
+
+//generate Build Information
+springBoot {
+    buildInfo()
 }
