@@ -1,26 +1,24 @@
 package inno.tech.handler.state
 
-import inno.tech.TelegramBotApi
 import inno.tech.constant.Command
 import inno.tech.constant.Message
 import inno.tech.constant.Status
 import inno.tech.exception.RandomCoffeeBotException
 import inno.tech.handler.Handler
 import inno.tech.model.User
+import inno.tech.service.message.MessageService
 import org.springframework.stereotype.Component
-import org.telegram.telegrambots.meta.api.methods.ParseMode
-import org.telegram.telegrambots.meta.api.methods.send.SendMessage
 import org.telegram.telegrambots.meta.api.objects.Update
 
 
 /**
  * Обработчик сообщения о пропуске пользователем участия в жеребьёвке.
  *
- * @param telegramBotApi компонент, предоставляющий доступ к Telegram Bot API
+ * @param messageService сервис отправки сообщений
  */
 @Component
 class SkipHandler(
-    private val telegramBotApi: TelegramBotApi,
+    private val messageService: MessageService,
 ) : Handler {
 
     override fun accept(command: String, user: User?): Boolean {
@@ -34,10 +32,6 @@ class SkipHandler(
 
         user.status = Status.SKIP
 
-        val skipReply = SendMessage()
-        skipReply.text = Message.MATCH_SKIP
-        skipReply.parseMode = ParseMode.MARKDOWN
-        skipReply.chatId = user.userId.toString()
-        telegramBotApi.execute(skipReply)
+        messageService.sendMessage(user.userId.toString(), Message.MATCH_SKIP)
     }
 }

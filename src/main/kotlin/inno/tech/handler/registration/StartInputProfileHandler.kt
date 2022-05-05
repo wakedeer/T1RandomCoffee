@@ -6,10 +6,12 @@ import inno.tech.constant.Command
 import inno.tech.constant.Message
 import inno.tech.constant.Status
 import inno.tech.extension.getChatId
+import inno.tech.extension.getChatIdAsString
 import inno.tech.extension.getUserId
 import inno.tech.handler.Handler
 import inno.tech.model.User
 import inno.tech.repository.UserRepository
+import inno.tech.service.message.MessageService
 import org.springframework.core.Ordered
 import org.springframework.core.annotation.Order
 import org.springframework.stereotype.Component
@@ -24,12 +26,14 @@ import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKe
  *
  * @param telegramBotApi компонент, предоставляющий доступ к Telegram Bot API
  * @param userRepository репозиторий для работы с информацией о пользователе
+ * @param messageService сервис отправки сообщений
  */
 @Order(Ordered.HIGHEST_PRECEDENCE)
 @Component
-class StartHandler(
+class StartInputProfileHandler(
     private val telegramBotApi: TelegramBotApi,
     private val userRepository: UserRepository,
+    private val messageService: MessageService,
 ) : Handler {
 
     override fun accept(command: String, user: User?): Boolean {
@@ -37,13 +41,8 @@ class StartHandler(
     }
 
     override fun handle(update: Update, user: User?) {
-        val chatId = update.getChatId()
 
-        val welcomeMsg = SendMessage()
-        welcomeMsg.text = Message.WELCOME
-        welcomeMsg.parseMode = ParseMode.MARKDOWN
-        welcomeMsg.chatId = chatId.toString()
-        telegramBotApi.execute(welcomeMsg)
+        messageService.sendMessage(update.getChatIdAsString(), Message.WELCOME)
 
         val telegramUsername = update.message?.from?.userName
         val u = if (user != null && user.status in COMMON_STATUSES) {
@@ -54,7 +53,7 @@ class StartHandler(
         } else {
             User(
                 userId = update.getUserId(),
-                chatId = chatId,
+                chatId = update.getChatId(),
                 username = telegramUsername,
                 status = Status.REG_NAME,
                 active = true,
@@ -66,7 +65,7 @@ class StartHandler(
         val nameQuestion = SendMessage()
         nameQuestion.text = Message.REG_STEP_1
         nameQuestion.parseMode = ParseMode.MARKDOWN
-        nameQuestion.chatId = chatId.toString()
+        nameQuestion.chatId = update.getChatIdAsString()
         nameQuestion.allowSendingWithoutReply = false
 
         val firstName = update.message?.from?.firstName?.let { "$it " } ?: ""

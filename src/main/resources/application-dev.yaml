@@ -1,8 +1,5 @@
 spring:
   config.activate.on-profile: dev
 
-schedule:
-  match: '0 * * * * *'
-
 telegram:
   name: 'InnotechRandomCoffeeTestBot'

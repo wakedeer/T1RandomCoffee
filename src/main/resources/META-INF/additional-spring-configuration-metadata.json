@@ -6,7 +6,7 @@
       "description": "Time to match pair."
     },
     {
-      "name": "schedule.suggest",
+      "name": "schedule.invite",
       "type": "java.lang.String",
       "description": "Time to ask about participation."
     },

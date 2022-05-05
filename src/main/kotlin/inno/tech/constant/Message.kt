@@ -13,7 +13,8 @@ object Message {
     val REG_STEP_1: String = loadTemplate("/message/registration/step1_name.md")
     val REG_STEP_2: String = loadTemplate("/message/registration/step2_city.md")
     val REG_STEP_3: String = loadTemplate("/message/registration/step3_profile.md")
-    val REG_SUCCESS: String = loadTemplate("/message/registration/success.md")
+    val SUCCESSFUL_SIGN_UP: String = loadTemplate("/message/registration/successful_sign_up.md")
+    val SUCCESSFUL_CHANGE_PROFILE: String = loadTemplate("/message/registration/successful_change_profile.md")
 
     val MATCH_INVITATION: String = loadTemplate("/message/match/invitation.md")
     val MATCH_SKIP: String = loadTemplate("/message/match/skip.md")
