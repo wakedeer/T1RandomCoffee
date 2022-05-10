@@ -119,20 +119,23 @@ class SubscriptionService(
         /** Количество попыток решить коллизию участников встречи. */
         const val MAX_ATTEMPT = 10
 
-        val SUGGESTION_MENU = createInvitationMenu()
+        /** Сообщение о готовности участвовать в жеребьевке. */
+        private const val READY_MESSAGE = "Да, конечно"
 
-        private fun createInvitationMenu(): InlineKeyboardMarkup {
+        /** Сообщение о пропуске участия в жеребьёвке. */
+        private const val SKIP_MESSAGE = "Пропущу неделю"
+
+        /** Меню выбора участия в жеребьёвке. */
+        val SUGGESTION_MENU = run {
             val infoBtn = InlineKeyboardButton().apply {
-                text = "Да, конечно"
+                text = READY_MESSAGE
                 callbackData = Command.READY.command
             }
-
             val showProfileBtn = InlineKeyboardButton().apply {
-                text = "Пропущу неделю"
+                text = SKIP_MESSAGE
                 callbackData = Command.SKIP.command
             }
-
-            return InlineKeyboardMarkup().apply {
+            InlineKeyboardMarkup().apply {
                 keyboard = listOf(listOf(infoBtn, showProfileBtn))
             }
         }

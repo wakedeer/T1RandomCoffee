@@ -68,19 +68,37 @@ class StartInputProfileHandler(
         nameQuestion.chatId = update.getChatIdAsString()
         nameQuestion.allowSendingWithoutReply = false
 
-        val firstName = update.message?.from?.firstName?.let { "$it " } ?: ""
-        val lastName = update.message?.from?.lastName ?: ""
-        val fullName = firstName + lastName
-        val resumeBtn = InlineKeyboardButton().apply {
-            text = fullName
-            callbackData = fullName
-        }
-        nameQuestion.replyMarkup = InlineKeyboardMarkup().apply {
-            keyboard = listOf(
-                listOf(resumeBtn),
-            )
+        val fullName = extractFullName(update)
+        if (fullName != null) {
+            val resumeBtn = InlineKeyboardButton().apply {
+                text = fullName
+                callbackData = fullName
+            }
+            nameQuestion.replyMarkup = InlineKeyboardMarkup().apply {
+                keyboard = listOf(
+                    listOf(resumeBtn),
+                )
+            }
         }
 
         telegramBotApi.execute(nameQuestion)
     }
+
+    /**
+     * Возвращает имя и фамилию пользователя из входящего сообщения.
+     * @param update входящее сообщение
+     * @return имя и фамилия
+     */
+    private fun extractFullName(update: Update): String? {
+        val userInfo = when {
+            update.hasMessage() -> update.message.from
+            update.hasCallbackQuery() -> update.callbackQuery.from
+            else -> return null
+        }
+
+        val firstName = userInfo.firstName.let { "$it " }
+        val lastName = userInfo.lastName ?: ""
+        return firstName + lastName
+    }
+
 }
