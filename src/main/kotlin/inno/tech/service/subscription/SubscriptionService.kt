@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKeyboardButton
+import org.telegram.telegrambots.meta.exceptions.TelegramApiRequestException
 
 /**
  * Сервис для рассылки уведомлений пользователем по расписанию.
@@ -89,7 +90,12 @@ class SubscriptionService(
             try {
                 messageService.sendMessageWithKeyboard(participant.chatId.toString(), SUGGESTION_MENU, Message.MATCH_SUGGESTION)
             } catch (ex: Exception) {
-                log.error("Sending a request. Error occurred with user ${participant.userId} ", ex)
+                if (ex is TelegramApiRequestException && ex.errorCode == 403) {
+                    log.warn("User ${participant.userId} unsubscribed from the bot. Deactivate user", ex)
+                    participant.active = false
+                } else {
+                    log.error("Sending a request. Error occurred with user ${participant.userId} ", ex)
+                }
             }
         }
     }
