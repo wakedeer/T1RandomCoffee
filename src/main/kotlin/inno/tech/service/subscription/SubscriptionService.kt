@@ -74,8 +74,8 @@ class SubscriptionService(
         val meeting = Meeting(userId1 = firstUser.userId, userId2 = secondUser.userId)
         meetingRepository.save(meeting)
 
-        messageService.sendInventionMessage(firstUser, secondUser)
-        messageService.sendInventionMessage(secondUser, firstUser)
+        messageService.sendInvitationMessage(firstUser, secondUser)
+        messageService.sendInvitationMessage(secondUser, firstUser)
         firstUser.status = Status.MATCHED
         secondUser.status = Status.MATCHED
     }

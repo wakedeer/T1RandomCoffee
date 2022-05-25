@@ -48,13 +48,13 @@ class TelegramMessageService(
         sendMessageWithKeyboard(user.chatId.toString(), contactPartnerBtn(user), Message.PROFILE, arrayOf(fullName, city, profileUrl))
     }
 
-    override fun sendInventionMessage(user: User, partner: User) {
+    override fun sendInvitationMessage(user: User, partner: User) {
 
         val profileUrl = partner.profileUrl ?: DATA_IS_NOT_DEFINED
         val fullName = partner.fullName ?: DATA_IS_NOT_DEFINED
         val city = partner.city ?: DATA_IS_NOT_DEFINED
 
-        sendMessageWithKeyboard(user.chatId.toString(), contactPartnerBtn(user), Message.MATCH_INVITATION, arrayOf(fullName, city, profileUrl))
+        sendMessageWithKeyboard(user.chatId.toString(), contactPartnerBtn(partner), Message.MATCH_INVITATION, arrayOf(fullName, city, profileUrl))
     }
 
     private fun contactPartnerBtn(partner: User): InlineKeyboardMarkup {
