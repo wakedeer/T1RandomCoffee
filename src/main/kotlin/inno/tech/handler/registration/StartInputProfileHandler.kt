@@ -1,6 +1,5 @@
 package inno.tech.handler.registration
 
-import inno.tech.TelegramBotApi
 import inno.tech.constant.COMMON_STATUSES
 import inno.tech.constant.Command
 import inno.tech.constant.Message
@@ -15,8 +14,6 @@ import inno.tech.service.message.MessageService
 import org.springframework.core.Ordered
 import org.springframework.core.annotation.Order
 import org.springframework.stereotype.Component
-import org.telegram.telegrambots.meta.api.methods.ParseMode
-import org.telegram.telegrambots.meta.api.methods.send.SendMessage
 import org.telegram.telegrambots.meta.api.objects.Update
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKeyboardButton
@@ -24,14 +21,12 @@ import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKe
 /**
  * Обработчик регистрации/перерегистрации пользователя.
  *
- * @param telegramBotApi компонент, предоставляющий доступ к Telegram Bot API
  * @param userRepository репозиторий для работы с информацией о пользователе
  * @param messageService сервис отправки сообщений
  */
 @Order(Ordered.HIGHEST_PRECEDENCE)
 @Component
 class StartInputProfileHandler(
-    private val telegramBotApi: TelegramBotApi,
     private val userRepository: UserRepository,
     private val messageService: MessageService,
 ) : Handler {
@@ -41,8 +36,8 @@ class StartInputProfileHandler(
     }
 
     override fun handle(update: Update, user: User?) {
-
-        messageService.sendMessage(update.getChatIdAsString(), Message.WELCOME)
+        val chatId = update.getChatIdAsString()
+        messageService.sendMessage(chatId, Message.WELCOME)
 
         val telegramUsername = update.message?.from?.userName
         val u = if (user != null && user.status in COMMON_STATUSES) {
@@ -62,26 +57,30 @@ class StartInputProfileHandler(
 
         userRepository.save(u)
 
-        val nameQuestion = SendMessage()
-        nameQuestion.text = Message.REG_STEP_1
-        nameQuestion.parseMode = ParseMode.MARKDOWN
-        nameQuestion.chatId = update.getChatIdAsString()
-        nameQuestion.allowSendingWithoutReply = false
-
         val fullName = extractFullName(update)
         if (fullName != null) {
-            val resumeBtn = InlineKeyboardButton().apply {
-                text = fullName
-                callbackData = fullName
-            }
-            nameQuestion.replyMarkup = InlineKeyboardMarkup().apply {
-                keyboard = listOf(
-                    listOf(resumeBtn),
-                )
-            }
+            val keyboard = createSuggestedNameKeyboard(fullName)
+            messageService.sendMessageWithKeyboard(chatId, keyboard, Message.REG_STEP_1)
+        } else {
+            messageService.sendMessage(chatId, Message.REG_STEP_1)
         }
+    }
 
-        telegramBotApi.execute(nameQuestion)
+    /**
+     * Возвращает клавиатуру с предлагаемым именем и фамилией пользователя.
+     * @param fullName имя и фамилия
+     * @return клавиатура с именем и фамилией
+     */
+    private fun createSuggestedNameKeyboard(fullName: String): InlineKeyboardMarkup {
+        val suggestedNameBtn = InlineKeyboardButton().apply {
+            text = fullName
+            callbackData = fullName
+        }
+        return InlineKeyboardMarkup().apply {
+            this.keyboard = listOf(
+                listOf(suggestedNameBtn),
+            )
+        }
     }
 
     /**

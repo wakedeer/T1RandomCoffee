@@ -15,17 +15,22 @@ import org.telegram.telegrambots.meta.api.objects.Update
  * @param subscriptionService сервис отправки уведомлений
  */
 @Component
-@Profile("dev")
+@Profile(value = ["dev", "manual"])
 class ManualMatchHandler(
     private val telegramProperties: TelegramProperties,
     private val subscriptionService: SubscriptionService,
 ) : Handler {
 
     override fun accept(command: String, user: User?): Boolean {
-        return telegramProperties.adminId == user?.userId && "/pair" == command
+        return telegramProperties.adminId == user?.userId && COMMAND == command
     }
 
     override fun handle(update: Update, user: User?) {
         subscriptionService.matchPairs()
+    }
+
+    companion object {
+        /** Команда запуска составления пар участников. */
+        const val COMMAND = "/match"
     }
 }

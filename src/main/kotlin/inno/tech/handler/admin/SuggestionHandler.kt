@@ -15,17 +15,22 @@ import org.telegram.telegrambots.meta.api.objects.Update
  * @param subscriptionService сервис отправки уведомлений
  */
 @Component
-@Profile("dev")
+@Profile(value = ["dev", "manual"])
 class SuggestionHandler(
     private val telegramProperties: TelegramProperties,
     private val subscriptionService: SubscriptionService,
 ) : Handler {
 
     override fun accept(command: String, user: User?): Boolean {
-        return telegramProperties.adminId == user?.userId && command == "/ask"
+        return telegramProperties.adminId == user?.userId && command == COMMAND
     }
 
     override fun handle(update: Update, user: User?) {
         subscriptionService.sendInvitation()
+    }
+
+    companion object {
+        /** Команда опроса пользователей об участии в жеребьёвке */
+        const val COMMAND = "/ask"
     }
 }

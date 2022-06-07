@@ -26,10 +26,6 @@ class TelegramMessageService(
         telegramBotApi.execute(message)
     }
 
-    override fun sendErrorMessage(chatId: Long) {
-        sendMessageWithKeyboard(chatId.toString(), MAIN_MENU, Message.ERROR)
-    }
-
     override fun sendMessageWithKeyboard(chatId: String, replyMarkup: InlineKeyboardMarkup, template: String, args: Array<Any>) {
         val message = SendMessage()
         message.text = MessageFormat.format(template, *args)
@@ -38,6 +34,10 @@ class TelegramMessageService(
         message.replyMarkup = replyMarkup
 
         telegramBotApi.execute(message)
+    }
+
+    override fun sendErrorMessage(chatId: Long) {
+        sendMessageWithKeyboard(chatId.toString(), MAIN_MENU, Message.ERROR)
     }
 
     override fun sendProfileInfoMessage(user: User) {
@@ -68,7 +68,6 @@ class TelegramMessageService(
             )
         }
     }
-
 
     companion object {
         /** Значение по умолчанию */

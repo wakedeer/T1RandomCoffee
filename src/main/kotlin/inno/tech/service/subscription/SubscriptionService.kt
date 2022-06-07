@@ -35,6 +35,7 @@ class SubscriptionService(
     @Transactional
     @Scheduled(cron = "\${schedule.match}")
     fun matchPairs() {
+        log.info("Pair matching is started")
         val participants = userRepository.findAllByStatusAndActiveTrue(Status.READY)
 
         var collisionCount = 0
@@ -55,7 +56,11 @@ class SubscriptionService(
                     continue
                 }
             } else {
-                sendInvitation(firstUser, secondUser)
+                val isSuccess = sendInvitation(firstUser, secondUser)
+                if (!isSuccess) {
+                    collisionCount++
+                    continue
+                }
             }
 
             collisionCount = 0
@@ -68,21 +73,30 @@ class SubscriptionService(
             sendFailure(u, Message.MATCH_FAILURE_ODD)
             u.status = Status.UNPAIRED
         }
+        log.info("Pair matching is finished successfully")
     }
 
-    fun sendInvitation(firstUser: User, secondUser: User) {
-        val meeting = Meeting(userId1 = firstUser.userId, userId2 = secondUser.userId)
-        meetingRepository.save(meeting)
+    fun sendInvitation(firstUser: User, secondUser: User): Boolean {
+        try {
+            messageService.sendInvitationMessage(firstUser, secondUser)
+            messageService.sendInvitationMessage(secondUser, firstUser)
+        } catch (e: Exception) {
+            log.error("Error occurred sending match message to pair ${firstUser.userId} and ${secondUser.userId}", e)
+            return false
+        }
 
-        messageService.sendInvitationMessage(firstUser, secondUser)
-        messageService.sendInvitationMessage(secondUser, firstUser)
         firstUser.status = Status.MATCHED
         secondUser.status = Status.MATCHED
+        meetingRepository.save(Meeting(userId1 = firstUser.userId, userId2 = secondUser.userId))
+
+        log.debug("Created pair first user id: ${firstUser.userId} and second user id: ${secondUser.userId}")
+        return true
     }
 
     @Transactional
     @Scheduled(cron = "\${schedule.invite}")
     fun sendInvitation() {
+        log.info("Invention sending is started")
         val invitationGroup = listOf(Status.MATCHED, Status.ASKED, Status.UNPAIRED, Status.SKIP)
         val participants = userRepository.findAllByStatusInAndActiveTrue(invitationGroup)
         participants.forEach { participant: User ->
@@ -90,7 +104,7 @@ class SubscriptionService(
             try {
                 messageService.sendMessageWithKeyboard(participant.chatId.toString(), SUGGESTION_MENU, Message.MATCH_SUGGESTION)
             } catch (ex: Exception) {
-                if (ex is TelegramApiRequestException && ex.errorCode == 403) {
+                if (ex is TelegramApiRequestException && 403 == ex.errorCode) {
                     log.warn("User ${participant.userId} unsubscribed from the bot. Deactivate user", ex)
                     participant.active = false
                 } else {
