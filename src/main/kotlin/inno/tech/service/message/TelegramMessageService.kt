@@ -16,20 +16,20 @@ class TelegramMessageService(
     private val telegramBotApi: TelegramBotApi,
 ) : MessageService {
 
-    override fun sendMessage(chatId: String, template: String, args: Array<Any>) {
+    override fun sendMessage(chatId: String, template: String, args: Array<String>) {
         val message = SendMessage()
-        message.text = MessageFormat.format(template, *args)
-        message.parseMode = ParseMode.MARKDOWN
+        message.text = MessageFormat.format(template, *sanitize(args))
+        message.parseMode = ParseMode.MARKDOWNV2
         message.chatId = chatId
         message.allowSendingWithoutReply = false
 
         telegramBotApi.execute(message)
     }
 
-    override fun sendMessageWithKeyboard(chatId: String, replyMarkup: InlineKeyboardMarkup, template: String, args: Array<Any>) {
+    override fun sendMessageWithKeyboard(chatId: String, replyMarkup: InlineKeyboardMarkup, template: String, args: Array<String>) {
         val message = SendMessage()
-        message.text = MessageFormat.format(template, *args)
-        message.parseMode = ParseMode.MARKDOWN
+        message.text = MessageFormat.format(template, *sanitize(args))
+        message.parseMode = ParseMode.MARKDOWNV2
         message.chatId = chatId
         message.replyMarkup = replyMarkup
 
@@ -69,9 +69,21 @@ class TelegramMessageService(
         }
     }
 
+    /**
+     * Экранирует с '\' специальные символы разметки MarkdownV2 Telegram Bot API.
+     * https://core.telegram.org/bots/api#markdownv2-style
+     *
+     * @param args аргументы без экранирования специальных символов
+     * @return аргументы с экранированием специальных символов
+     */
+    private fun sanitize(args: Array<String>): Array<String> = args.map { arg -> arg.replace(MATCH_TG_ESCAPE_SYMBOLS) { "\\${it.value}" } }.toTypedArray()
+
     companion object {
         /** Значение по умолчанию */
         const val DATA_IS_NOT_DEFINED = "Не определено"
+
+        /** Регулярное выражение, находящее символы: '_', '*', '[', ']', '(', ')', '~', '`', '>', '#', '+', '-', '=', '|', '{', '}', '.', '!' в строке */
+        val MATCH_TG_ESCAPE_SYMBOLS = Regex("[\\_\\*\\[\\]\\(\\)\\~\\`\\>\\#\\+\\-\\=\\|\\{\\}\\.\\!]")
 
         /** Главное меню приложения */
         val MAIN_MENU: InlineKeyboardMarkup = createMainMenu()

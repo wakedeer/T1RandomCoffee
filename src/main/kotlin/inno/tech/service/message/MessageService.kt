@@ -27,7 +27,7 @@ interface MessageService {
      * @param template шаблон сообщения
      * @param args список агрументов для подстановки в шаблон
      */
-    fun sendMessage(chatId: String, template: String, args: Array<Any> = emptyArray())
+    fun sendMessage(chatId: String, template: String, args: Array<String> = emptyArray())
 
     /**
      * Отправляет шаблонизирование сообщение с Inline клавиатурой
@@ -36,7 +36,7 @@ interface MessageService {
      * @param template шаблон сообщения
      * @param args список агрументов для подстановки в шаблон
      */
-    fun sendMessageWithKeyboard(chatId: String, replyMarkup: InlineKeyboardMarkup, template: String, args: Array<Any> = emptyArray())
+    fun sendMessageWithKeyboard(chatId: String, replyMarkup: InlineKeyboardMarkup, template: String, args: Array<String> = emptyArray())
 
     /**
      * Отправляет главное меню бота, если обработчик сообщения не найден.
