@@ -1,4 +1,4 @@
-Вот так будет выглядеть твой профиль в сообщении, которое мы пришлем твоему собеседнику:  
+This is what your profile will look like in the message we send to your match/:  
 
 {0} \({1}\)  
-Профиль: {2}
+Profile: {2}

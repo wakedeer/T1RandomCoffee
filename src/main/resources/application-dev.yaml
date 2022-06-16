@@ -2,4 +2,4 @@ spring:
   config.activate.on-profile: dev
 
 telegram:
-  name: 'InnotechRandomCoffeeTestBot'
+  name: 'CupOfEnglishTea_bot'

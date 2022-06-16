@@ -140,10 +140,10 @@ class SubscriptionService(
         const val MAX_ATTEMPT = 10
 
         /** Сообщение о готовности участвовать в жеребьевке. */
-        private const val READY_MESSAGE = "Да, конечно"
+        private const val READY_MESSAGE = "Yes, sure"
 
         /** Сообщение о пропуске участия в жеребьёвке. */
-        private const val SKIP_MESSAGE = "Пропущу неделю"
+        private const val SKIP_MESSAGE = "Skip one week"
 
         /** Меню выбора участия в жеребьёвке. */
         val SUGGESTION_MENU = run {

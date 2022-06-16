@@ -1,3 +1,3 @@
-😬 Упс\! Жеребьёвка прошла, но мы не нашли тебе пару\.  
-Не переживай\!  
-Как только появится новый участник, мы пришлём тебе его контакты\.  
+😬 Oops\! The draw was held, but we haven't found a match for you\.  
+Don't worry\!  
+As soon as a new participant registers, we will send you their contact details\.  

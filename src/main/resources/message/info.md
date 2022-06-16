@@ -1,7 +1,5 @@
-🔵🔵🔵 Иннотех\. Random Coffee   
-Каждую неделю мы предлагаем тебе для встречи коллегу из Иннотех, а неловкость знакомства — берем на себя\.
+🔵🔵🔵 A Cup Of English Tea 
+Every week we match you up with another user\. Forget the awkwardness of the first meeting\. We got you\.
+For any questions — @kamilakadrian
+Version {0} 
 
-По всем вопросам — @AlekseiMironov
-Версия бота {0} 
-
-Также не забывай о чатах и каналах Иннотех в Telegram

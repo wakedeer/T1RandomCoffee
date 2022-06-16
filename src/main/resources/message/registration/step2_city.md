@@ -1,1 +1,1 @@
-Шаг 2/3\. Из какого ты города? \(Выбрать или ввести иное\)
+Шаг 2/3\. What city are you from? \(Choose or enter your choice\)

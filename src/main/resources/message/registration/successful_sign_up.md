@@ -1,5 +1,5 @@
-Ура\! 💙💙💙
+Yay\! 💙💙💙
 
-Поздравляем\! Ты — новый участник встреч Иннотех ☕ Random Coffee
+Congrats\! You are a new participant in A Cup Of English Tea
 
-Скоро мы пришлём твою пару 📨️
+Soon we are going to match you up with another user 📨️

@@ -1,1 +1,1 @@
-Шаг 1/3\. Как тебя зовут? \(Выбрать или ввести иное\)
+Шаг 1/3\. What's your name? \(Choose or enter your choice\)

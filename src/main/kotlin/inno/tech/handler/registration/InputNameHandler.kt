@@ -41,15 +41,14 @@ class InputNameHandler(
         private fun chooseCityBtn(): InlineKeyboardMarkup {
             return InlineKeyboardMarkup().apply {
                 keyboard = listOf(
-                    listOf(cityBtn("Москва"), cityBtn("Санкт-Петербург")),
-                    listOf(cityBtn("Новосибирск"), cityBtn("Екатеринбург")),
-                    listOf(cityBtn("Казань"), cityBtn("Самара")),
-                    listOf(cityBtn("Нижний Новгород"), cityBtn("Воронеж")),
-                    listOf(cityBtn("Краснодар"), cityBtn("Тюмень")),
-                    listOf(cityBtn("Ижевск"), cityBtn("Хабаровск")),
-                    listOf(cityBtn("Владивосток"), cityBtn("Томск")),
-                    listOf(cityBtn("Рязань"), cityBtn("Севастополь")),
-                    listOf(cityBtn("Калининград")),
+                    listOf(cityBtn("Moscow"), cityBtn("St. Petersburg")),
+                    listOf(cityBtn("Novosibirsk"), cityBtn("Yekaterinburg")),
+                    listOf(cityBtn("Kazan"), cityBtn("Samara")),
+                    listOf(cityBtn("Nizhny Novgorod"), cityBtn("Voronezh")),
+                    listOf(cityBtn("Krasnodar"), cityBtn("Tyumen")),
+                    listOf(cityBtn("Izhevsk"), cityBtn("Khabarovsk")),
+                    listOf(cityBtn("Vladivostok"), cityBtn("Tomsk")),
+                    listOf(cityBtn("Ryazan"), cityBtn("Калининград")),
                 )
             }
         }

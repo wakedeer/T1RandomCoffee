@@ -1,1 +1,1 @@
-Всё готово для участия в Иннотех\. Random Coffee ✅
+Everything's ready for you to take a part in A Cup Of English Tea\.  ✅

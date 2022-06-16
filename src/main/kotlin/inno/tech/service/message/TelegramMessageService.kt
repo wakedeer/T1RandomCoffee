@@ -91,11 +91,11 @@ class TelegramMessageService(
 
         private fun createMainMenu() = InlineKeyboardMarkup().apply {
             keyboard = listOf(
-                listOf(actionBtn("Что такое Random coffee", Command.INFO)),
-                listOf(actionBtn("Посмотреть свой профиль", Command.SHOW_PROFILE)),
-                listOf(actionBtn("Поменять данные профиля", Command.EDIT_PROFILE)),
-                listOf(actionBtn("Поставить бот на паузу", Command.PAUSE)),
-                listOf(actionBtn("Снять бота с паузы", Command.RESUME)),
+                listOf(actionBtn("About Random coffee", Command.INFO)),
+                listOf(actionBtn("My profile", Command.SHOW_PROFILE)),
+                listOf(actionBtn("Change profile", Command.EDIT_PROFILE)),
+                listOf(actionBtn("Pause bot", Command.PAUSE)),
+                listOf(actionBtn("Resume bot", Command.RESUME)),
             )
         }
 

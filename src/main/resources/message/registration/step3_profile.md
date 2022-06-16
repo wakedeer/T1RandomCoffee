@@ -1,2 +1,2 @@
-Шаг 3/3\. Укажи ссылку на свою страничку в социальных сетях \(Иннотех портал, VK, Instagram и тд\)  
-Пропустить указать \-
+Шаг 3/3\. Provide a link to your social media account \(VK, Instagram, etc\.\)  
+Skip send a link \)
