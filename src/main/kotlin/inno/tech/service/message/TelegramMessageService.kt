@@ -59,7 +59,8 @@ class TelegramMessageService(
 
     private fun contactPartnerBtn(partner: User): InlineKeyboardMarkup {
         val contactPartner = InlineKeyboardButton().apply {
-            text = "Telegram ${partner.fullName}"
+            val name = partner.fullName ?: ""
+            text = "Telegram $name"
             url = "tg://user?id=${partner.userId}"
         }
         return InlineKeyboardMarkup().apply {
