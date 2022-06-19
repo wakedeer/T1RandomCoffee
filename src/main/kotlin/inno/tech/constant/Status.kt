@@ -8,6 +8,9 @@ enum class Status {
     /** Регистрация. Пользователь ввёл имя */
     REG_NAME,
 
+    /** Регистрация. Пользователь ввёл уровень владения языком */
+    REG_LEVEL,
+
     /** Регистрация. Пользователь ввёл город */
     REG_CITY,
 
@@ -29,15 +32,6 @@ enum class Status {
     /** Пользователь не нашедший пару при жеребьёвке */
     UNPAIRED,
 }
-
-/**
- * Статусы регистрации.
- */
-val REGISTRATION_STATUSES = listOf(
-    Status.REG_NAME,
-    Status.REG_CITY,
-    Status.REG_PROFILE_URL,
-)
 
 /**
  * Основные статусы.

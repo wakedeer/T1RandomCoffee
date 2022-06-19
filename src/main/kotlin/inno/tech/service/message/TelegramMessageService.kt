@@ -43,9 +43,10 @@ class TelegramMessageService(
     override fun sendProfileInfoMessage(user: User) {
         val fullName = user.fullName ?: DATA_IS_NOT_DEFINED
         val city = user.city ?: DATA_IS_NOT_DEFINED
+        val level = user.level?.toString() ?: DATA_IS_NOT_DEFINED
         val profileUrl = user.profileUrl ?: DATA_IS_NOT_DEFINED
 
-        sendMessageWithKeyboard(user.chatId.toString(), contactPartnerBtn(user), Message.PROFILE, arrayOf(fullName, city, profileUrl))
+        sendMessageWithKeyboard(user.chatId.toString(), contactPartnerBtn(user), Message.PROFILE, arrayOf(fullName, city, level, profileUrl))
     }
 
     override fun sendInvitationMessage(user: User, partner: User) {

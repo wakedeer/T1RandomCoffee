@@ -11,8 +11,9 @@ object Message {
     val INFO: String = loadTemplate("/message/info.md")
 
     val REG_STEP_1: String = loadTemplate("/message/registration/step1_name.md")
-    val REG_STEP_2: String = loadTemplate("/message/registration/step2_city.md")
-    val REG_STEP_3: String = loadTemplate("/message/registration/step3_profile.md")
+    val REG_STEP_2: String = loadTemplate("/message/registration/step2_level.md")
+    val REG_STEP_3: String = loadTemplate("/message/registration/step3_city.md")
+    val REG_STEP_4: String = loadTemplate("/message/registration/step4_profile.md")
     val SUCCESSFUL_SIGN_UP: String = loadTemplate("/message/registration/successful_sign_up.md")
     val SUCCESSFUL_CHANGE_PROFILE: String = loadTemplate("/message/registration/successful_change_profile.md")
 

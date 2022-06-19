@@ -1,8 +1,14 @@
 package inno.tech.model
 
+import inno.tech.constant.Level
 import inno.tech.constant.Status
 import java.time.LocalDateTime
-import javax.persistence.*
+import javax.persistence.Column
+import javax.persistence.Entity
+import javax.persistence.EnumType
+import javax.persistence.Enumerated
+import javax.persistence.Id
+import javax.persistence.Table
 
 /**
  * Пользователь.
@@ -27,6 +33,10 @@ class User(
     /** Никнейм */
     @Column(name = "USERNAME")
     var username: String? = null,
+
+    /** Уровень владения языком  */
+    @Column(name = "LEVEL")
+    var level: Level? = null,
 
     /** Город */
     @Column(name = "CITY")
