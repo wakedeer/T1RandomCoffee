@@ -1,1 +1,1 @@
-Everything's ready for you to take a part in A Cup Of English Tea\.  ✅
+Everything\'s ready for you to take a part in Learn Coffee\.Speaking Club\.  ✅

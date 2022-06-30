@@ -1,4 +1,4 @@
-🔵🔵🔵 A Cup Of English Tea 
+🔵🔵🔵 Learn Coffee\.Speaking Club 
 Every week we match you up with another user\. Forget the awkwardness of the first meeting\. We got you\.
 For any questions — @kamilakadrian
 Version {0} 

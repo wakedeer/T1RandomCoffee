@@ -47,7 +47,7 @@ class InputCityHandler(
                     listOf(cityBtn("Krasnodar"), cityBtn("Tyumen")),
                     listOf(cityBtn("Izhevsk"), cityBtn("Khabarovsk")),
                     listOf(cityBtn("Vladivostok"), cityBtn("Tomsk")),
-                    listOf(cityBtn("Ryazan"), cityBtn("Калининград")),
+                    listOf(cityBtn("Ryazan"), cityBtn("Kaliningrad")),
                 )
             }
         }

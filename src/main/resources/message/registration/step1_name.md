@@ -1,1 +1,1 @@
-Шаг 1/4\. What's your name? \(Choose or enter your choice\)
+Step 1/4\. What's your name? \(Choose or enter your choice\)
