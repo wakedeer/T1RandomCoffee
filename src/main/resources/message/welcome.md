@@ -1,9 +1,9 @@
 Hi\!👋  
 It's Learn Coffee\.Speaking Club
 
-🤖 This bot is for those who'd like to practice their English and meet new people\.  
+🤖 This bot is for those who''d like to practice their English and meet new people\.  
 
-\- Every week you\'ll be matched up with another user of Learn Coffee\.Speaking Club
+\- Every week you''ll be matched up with another user of Learn Coffee\.Speaking Club
 \- Once you are matched, you and your match will agree on the details and the time of your online meeting
 \- At the end of the week, you can choose whether you want to take part in the next week's draw or not\. 
 
