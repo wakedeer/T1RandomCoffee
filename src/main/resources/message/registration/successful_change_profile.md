@@ -1,1 +1,1 @@
-Everything''s ready for you to take a part in Learn Coffee\.Speaking Club\.  ✅
+Everything''s ready for you to take a part in Innotech\.English Random Coffee\.  ✅
