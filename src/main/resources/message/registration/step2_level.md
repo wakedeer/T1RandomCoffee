@@ -1,1 +1,1 @@
-Step 2/4\. Chosse your English level \(A1, A2, B1, B2, C1, C2\)
+Step 2/4\. Chose your English level \(A1, A2, B1, B2, C1, C2\)
