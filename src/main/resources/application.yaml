@@ -1,7 +1,7 @@
 spring:
   datasource:
     driver-class-name: org.postgresql.Driver
-    url: 'jdbc:postgresql://localhost:5432/random_coffee'
+    url: 'jdbc:postgresql://localhost:5432/eng_random_coffee'
     username: 'random'
     password: 'coffee2022!'
   jpa:
