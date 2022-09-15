@@ -11,7 +11,7 @@ import org.springframework.data.repository.query.Param
 interface MeetingRepository : CrudRepository<Meeting, Long> {
 
     /**
-     * Проверяет ранее была ли встреча между участиниками.
+     * Проверяет ранее была ли встреча между участниками.
      * @param userId1 идентификатор пользователя 1
      * @param userId2 идентификатор пользователя 2
      * @return true - если ранее участники уже встречались, false - участники не встречались

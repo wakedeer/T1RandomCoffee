@@ -50,7 +50,9 @@ class FinishInputProfileHandler(
             //try to find a pair for the new user
             messageService.sendMessage(update.getChatIdAsString(), Message.SUCCESSFUL_SIGN_UP)
 
-            val readyUser = userRepository.findAllByStatusInAndActiveTrue(listOf(Status.READY, Status.UNPAIRED)).firstOrNull()
+            val level = user.level ?: throw RandomCoffeeBotException("level should be filled")
+            val readyUser = userRepository.findAllByStatusInAndLevelAndActiveTrue(listOf(Status.READY, Status.UNPAIRED), level).firstOrNull()
+
             if (readyUser != null) {
                 // the pair found
                 subscriptionService.sendInvitation(readyUser, user)

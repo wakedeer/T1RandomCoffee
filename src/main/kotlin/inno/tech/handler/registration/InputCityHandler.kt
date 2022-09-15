@@ -3,6 +3,7 @@ package inno.tech.handler.registration
 import inno.tech.constant.Message
 import inno.tech.constant.Status
 import inno.tech.exception.RandomCoffeeBotException
+import inno.tech.extension.createBtn
 import inno.tech.extension.getChatIdAsString
 import inno.tech.extension.getMessageText
 import inno.tech.handler.Handler
@@ -11,7 +12,6 @@ import inno.tech.service.message.MessageService
 import org.springframework.stereotype.Component
 import org.telegram.telegrambots.meta.api.objects.Update
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup
-import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKeyboardButton
 
 @Component
 class InputCityHandler(
@@ -40,24 +40,16 @@ class InputCityHandler(
         private fun chooseCityBtn(): InlineKeyboardMarkup {
             return InlineKeyboardMarkup().apply {
                 keyboard = listOf(
-                    listOf(cityBtn("Moscow"), cityBtn("St. Petersburg")),
-                    listOf(cityBtn("Novosibirsk"), cityBtn("Yekaterinburg")),
-                    listOf(cityBtn("Kazan"), cityBtn("Samara")),
-                    listOf(cityBtn("Nizhny Novgorod"), cityBtn("Voronezh")),
-                    listOf(cityBtn("Krasnodar"), cityBtn("Tyumen")),
-                    listOf(cityBtn("Izhevsk"), cityBtn("Khabarovsk")),
-                    listOf(cityBtn("Vladivostok"), cityBtn("Tomsk")),
-                    listOf(cityBtn("Ryazan"), cityBtn("Kaliningrad")),
+                    listOf(createBtn("Moscow"), createBtn("St. Petersburg")),
+                    listOf(createBtn("Novosibirsk"), createBtn("Yekaterinburg")),
+                    listOf(createBtn("Kazan"), createBtn("Samara")),
+                    listOf(createBtn("Nizhny Novgorod"), createBtn("Voronezh")),
+                    listOf(createBtn("Krasnodar"), createBtn("Tyumen")),
+                    listOf(createBtn("Izhevsk"), createBtn("Khabarovsk")),
+                    listOf(createBtn("Vladivostok"), createBtn("Tomsk")),
+                    listOf(createBtn("Ryazan"), createBtn("Kaliningrad")),
                 )
             }
-        }
-
-        private fun cityBtn(city: String): InlineKeyboardButton {
-            val contactPartner = InlineKeyboardButton().apply {
-                text = city
-                callbackData = city
-            }
-            return contactPartner
         }
     }
 }

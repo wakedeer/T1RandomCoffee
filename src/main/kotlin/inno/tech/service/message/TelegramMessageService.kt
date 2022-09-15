@@ -53,9 +53,10 @@ class TelegramMessageService(
 
         val profileUrl = partner.profileUrl ?: DATA_IS_NOT_DEFINED
         val fullName = partner.fullName ?: DATA_IS_NOT_DEFINED
+        val level = partner.level?.name ?: DATA_IS_NOT_DEFINED
         val city = partner.city ?: DATA_IS_NOT_DEFINED
 
-        sendMessageWithKeyboard(user.chatId.toString(), contactPartnerBtn(partner), Message.MATCH_INVITATION, arrayOf(fullName, city, profileUrl))
+        sendMessageWithKeyboard(user.chatId.toString(), contactPartnerBtn(partner), Message.MATCH_INVITATION, arrayOf(fullName, city, level, profileUrl))
     }
 
     private fun contactPartnerBtn(partner: User): InlineKeyboardMarkup {
@@ -82,7 +83,7 @@ class TelegramMessageService(
 
     companion object {
         /** Значение по умолчанию */
-        const val DATA_IS_NOT_DEFINED = "Не определено"
+        const val DATA_IS_NOT_DEFINED = "is not defined"
 
         /** Регулярное выражение, находящее символы: '_', '*', '[', ']', '(', ')', '~', '`', '>', '#', '+', '-', '=', '|', '{', '}', '.', '!' в строке */
         val MATCH_TG_ESCAPE_SYMBOLS = Regex("[\\_\\*\\[\\]\\(\\)\\~\\`\\>\\#\\+\\-\\=\\|\\{\\}\\.\\!]")

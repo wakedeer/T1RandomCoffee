@@ -1,7 +1,10 @@
 package inno.tech.service.subscription
 
 import inno.tech.constant.Command
+import inno.tech.constant.Level
 import inno.tech.constant.Message
+import inno.tech.constant.Message.MATCH_FAILURE_SEND_TO_PARTNER
+import inno.tech.constant.SendInvitationStatus
 import inno.tech.constant.Status
 import inno.tech.model.Meeting
 import inno.tech.model.User
@@ -15,6 +18,7 @@ import org.springframework.transaction.annotation.Transactional
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKeyboardButton
 import org.telegram.telegrambots.meta.exceptions.TelegramApiRequestException
+import java.util.LinkedList
 
 /**
  * Сервис для рассылки уведомлений пользователем по расписанию.
@@ -36,61 +40,79 @@ class SubscriptionService(
     @Scheduled(cron = "\${schedule.match}")
     fun matchPairs() {
         log.info("Pair matching is started")
-        val participants = userRepository.findAllByStatusAndActiveTrue(Status.READY)
 
-        var collisionCount = 0
-        while (participants.count() > 1) {
-            val (firstUserIndex, secondUserIndex) = findIndexes(0 until participants.count())
+        val nextLevelParticipants = mutableListOf<User>()
+        for (level in Level.values()) {
+            val participants = LinkedList(nextLevelParticipants)
+            participants.addAll(userRepository.findAllByStatusAndLevelAndActiveTrue(Status.READY, level))
+            nextLevelParticipants.clear()
 
-            val firstUser = participants[firstUserIndex]
-            val secondUser = participants[secondUserIndex]
+            while (participants.count() > 1) {
 
-            if (meetingRepository.existsMeeting(firstUser.userId, secondUser.userId)) {
-                if (collisionCount > MAX_ATTEMPT) {
-                    sendFailure(firstUser, Message.MATCH_FAILURE)
-                    sendFailure(secondUser, Message.MATCH_FAILURE)
-                    firstUser.status = Status.UNPAIRED
-                    secondUser.status = Status.UNPAIRED
-                } else {
-                    collisionCount++
+                val firstUser = participants.removeFirst()
+                val secondUser = participants.find { candidate -> meetingRepository.existsMeeting(firstUser.userId, candidate.userId).not() }
+
+                if (secondUser == null) {
+                    log.debug("Can't find pair for user ${firstUser.userId}")
+                    nextLevelParticipants.add(firstUser)
                     continue
                 }
-            } else {
-                val isSuccess = sendInvitation(firstUser, secondUser)
-                if (!isSuccess) {
-                    collisionCount++
-                    continue
+
+                when (sendInvitation(firstUser, secondUser)) {
+                    SendInvitationStatus.OK -> {
+                        participants.remove(secondUser)
+                        log.info("Invitation has been sent to ${firstUser.userId} and ${secondUser.userId} ")
+                    }
+
+                    SendInvitationStatus.FIRST_ERROR -> {
+                        firstUser.active = false
+                        log.warn("User ${firstUser.userId} has been deactivated ")
+                    }
+
+                    SendInvitationStatus.SECOND_ERROR -> {
+                        secondUser.active = false
+                        participants.addFirst(firstUser)
+                        participants.remove(secondUser)
+                        log.warn("User ${secondUser.userId} has been deactivated ")
+                    }
                 }
             }
-
-            collisionCount = 0
-            participants.remove(firstUser)
-            participants.remove(secondUser)
+            nextLevelParticipants.addAll(participants)
         }
 
         // set unscheduled status for other
-        participants.forEach { u: User ->
-            sendFailure(u, Message.MATCH_FAILURE_ODD)
-            u.status = Status.UNPAIRED
+        nextLevelParticipants.forEach { participant: User ->
+            sendFailure(participant, Message.MATCH_FAILURE)
+            participant.status = Status.UNPAIRED
+            log.info("User ${participant.userId} hasn't been matched")
         }
+
         log.info("Pair matching is finished successfully")
     }
 
-    fun sendInvitation(firstUser: User, secondUser: User): Boolean {
+    fun sendInvitation(firstUser: User, secondUser: User): SendInvitationStatus {
         try {
             messageService.sendInvitationMessage(firstUser, secondUser)
-            messageService.sendInvitationMessage(secondUser, firstUser)
         } catch (e: Exception) {
             log.error("Error occurred sending match message to pair ${firstUser.userId} and ${secondUser.userId}", e)
-            return false
+            return SendInvitationStatus.FIRST_ERROR
+        }
+
+        try {
+            messageService.sendInvitationMessage(secondUser, firstUser)
+        } catch (e: Exception) {
+            messageService.sendMessage(firstUser.userId.toString(), MATCH_FAILURE_SEND_TO_PARTNER)
+            log.error("Error occurred sending match message to pair ${firstUser.userId} and ${secondUser.userId}", e)
+            return SendInvitationStatus.SECOND_ERROR
         }
 
         firstUser.status = Status.MATCHED
         secondUser.status = Status.MATCHED
         meetingRepository.save(Meeting(userId1 = firstUser.userId, userId2 = secondUser.userId))
 
-        log.debug("Created pair first user id: ${firstUser.userId} and second user id: ${secondUser.userId}")
-        return true
+        log.info("Created pair first user id: ${firstUser.userId} and second user id: ${secondUser.userId}")
+
+        return SendInvitationStatus.OK
     }
 
     @Transactional
@@ -112,19 +134,8 @@ class SubscriptionService(
                 }
             }
         }
+        log.info("Invention sending has finished")
     }
-
-    private fun findIndexes(userIndexes: IntRange): Pair<Int, Int> {
-        var firstUserIndex: Int
-        var secondUserIndex: Int
-        do {
-            firstUserIndex = userIndexes.random()
-            secondUserIndex = userIndexes.random()
-        } while (firstUserIndex == secondUserIndex)
-
-        return Pair(firstUserIndex, secondUserIndex)
-    }
-
 
     private fun sendFailure(user: User, reason: String) {
         try {
@@ -135,9 +146,6 @@ class SubscriptionService(
     }
 
     companion object {
-
-        /** Количество попыток решить коллизию участников встречи. */
-        const val MAX_ATTEMPT = 10
 
         /** Сообщение о готовности участвовать в жеребьевке. */
         private const val READY_MESSAGE = "Yes, sure"

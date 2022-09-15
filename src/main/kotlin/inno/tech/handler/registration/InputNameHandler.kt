@@ -6,12 +6,11 @@ import inno.tech.exception.RandomCoffeeBotException
 import inno.tech.extension.getChatIdAsString
 import inno.tech.extension.getMessageText
 import inno.tech.handler.Handler
+import inno.tech.handler.registration.InputLevelHandler.Companion.LEVELS
 import inno.tech.model.User
 import inno.tech.service.message.MessageService
 import org.springframework.stereotype.Component
 import org.telegram.telegrambots.meta.api.objects.Update
-import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup
-import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKeyboardButton
 
 @Component
 class InputNameHandler(
@@ -30,6 +29,6 @@ class InputNameHandler(
         user.fullName = update.getMessageText()
         user.status = Status.REG_LEVEL
 
-        messageService.sendMessage(update.getChatIdAsString(), Message.REG_STEP_2)
+        messageService.sendMessageWithKeyboard(update.getChatIdAsString(), LEVELS, Message.REG_STEP_2)
     }
 }

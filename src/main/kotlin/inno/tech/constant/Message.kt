@@ -22,7 +22,7 @@ object Message {
     val MATCH_SUGGESTION: String = loadTemplate("/message/match/suggestion.md")
     val READY_TO_MATCH: String = loadTemplate("/message/match/success.md")
     val MATCH_FAILURE: String = loadTemplate("/message/match/failure.md")
-    val MATCH_FAILURE_ODD: String = loadTemplate("/message/match/failure_odd.md")
+    val MATCH_FAILURE_SEND_TO_PARTNER: String = loadTemplate("/message/match/failure_send_msg_to_partner.md")
 
     val STATUS_PAUSE: String = loadTemplate("/message/status/pause.md")
     val STATUS_RESUME: String = loadTemplate("/message/status/resume.md")

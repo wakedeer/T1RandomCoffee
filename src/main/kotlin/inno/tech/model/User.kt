@@ -35,6 +35,7 @@ class User(
     var username: String? = null,
 
     /** Уровень владения языком  */
+    @Enumerated(EnumType.STRING)
     @Column(name = "LEVEL")
     var level: Level? = null,
 
