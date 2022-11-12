@@ -28,7 +28,7 @@ class InputCityHandler(
         }
 
         user.city = update.getMessageText()
-        user.status = Status.REG_PROFILE_URL
+        user.status = Status.REG_PROFILE
 
         messageService.sendMessage(update.getChatIdAsString(), Message.REG_STEP_4)
     }

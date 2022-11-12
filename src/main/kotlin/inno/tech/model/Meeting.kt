@@ -1,7 +1,14 @@
 package inno.tech.model
 
 import java.time.LocalDateTime
-import javax.persistence.*
+import javax.persistence.Column
+import javax.persistence.Entity
+import javax.persistence.GeneratedValue
+import javax.persistence.GenerationType
+import javax.persistence.Id
+import javax.persistence.JoinColumn
+import javax.persistence.ManyToOne
+import javax.persistence.Table
 
 /**
  * Встреча.
@@ -26,4 +33,9 @@ class Meeting(
     /** Время создания записи (Время жеребьёвки) */
     @Column(name = "MATCH_DATE")
     var matchDate: LocalDateTime = LocalDateTime.now(),
+
+    /** Тема встречи */
+    @ManyToOne
+    @JoinColumn(name = "TOPIC_ID", nullable = false)
+    var topic: Topic,
 )

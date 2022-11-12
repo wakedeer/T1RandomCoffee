@@ -1,3 +1,9 @@
 databaseChangeLog:
   - include:
       file: db/changelog/1.0.0-init-db.yaml
+  - include:
+      file: db/changelog/1.0.1-update-profile.yaml
+  - include:
+      file: db/changelog/1.0.2-create-question-tables.yaml
+  - include:
+      file: db/changelog/1.0.3-insert-question-data.yaml

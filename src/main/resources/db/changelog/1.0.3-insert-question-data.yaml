@@ -1,0 +1,7 @@
+databaseChangeLog:
+  - changeSet:
+      id: 'insert-question-data'
+      author: 'amironov'
+      changes:
+        - sqlFile:
+            path: 'db/changelog/sql/1.0.3-insert-question-data.sql'

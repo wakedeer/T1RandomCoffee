@@ -33,4 +33,7 @@ enum class Command(val command: String) {
 
     /** Пропуск участия в жеребьёвке */
     SKIP("/skip"),
+
+    /** Открыть вопросы топика */
+    SHOW_QUESTIONS("/topic/"),
 }

@@ -9,6 +9,7 @@ import inno.tech.constant.Status
 import inno.tech.model.Meeting
 import inno.tech.model.User
 import inno.tech.repository.MeetingRepository
+import inno.tech.repository.TopicRepository
 import inno.tech.repository.UserRepository
 import inno.tech.service.message.MessageService
 import mu.KotlinLogging
@@ -19,6 +20,7 @@ import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMa
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKeyboardButton
 import org.telegram.telegrambots.meta.exceptions.TelegramApiRequestException
 import java.util.LinkedList
+
 
 /**
  * Сервис для рассылки уведомлений пользователем по расписанию.
@@ -31,6 +33,7 @@ class SubscriptionService(
     private val userRepository: UserRepository,
     private val meetingRepository: MeetingRepository,
     private val messageService: MessageService,
+    private val topicRepository: TopicRepository,
 ) {
 
     /** Logger. */
@@ -91,15 +94,16 @@ class SubscriptionService(
     }
 
     fun sendInvitation(firstUser: User, secondUser: User): SendInvitationStatus {
+        val topic = topicRepository.getRandomTopic()
         try {
-            messageService.sendInvitationMessage(firstUser, secondUser)
+            messageService.sendInvitationMessage(firstUser, secondUser, topic)
         } catch (e: Exception) {
             log.error("Error occurred sending match message to pair ${firstUser.userId} and ${secondUser.userId}", e)
             return SendInvitationStatus.FIRST_ERROR
         }
 
         try {
-            messageService.sendInvitationMessage(secondUser, firstUser)
+            messageService.sendInvitationMessage(secondUser, firstUser, topic)
         } catch (e: Exception) {
             messageService.sendMessage(firstUser.userId.toString(), MATCH_FAILURE_SEND_TO_PARTNER)
             log.error("Error occurred sending match message to pair ${firstUser.userId} and ${secondUser.userId}", e)
@@ -108,7 +112,7 @@ class SubscriptionService(
 
         firstUser.status = Status.MATCHED
         secondUser.status = Status.MATCHED
-        meetingRepository.save(Meeting(userId1 = firstUser.userId, userId2 = secondUser.userId))
+        meetingRepository.save(Meeting(userId1 = firstUser.userId, userId2 = secondUser.userId, topic = topic))
 
         log.info("Created pair first user id: ${firstUser.userId} and second user id: ${secondUser.userId}")
 

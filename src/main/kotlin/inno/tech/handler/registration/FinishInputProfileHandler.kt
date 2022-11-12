@@ -28,7 +28,7 @@ class FinishInputProfileHandler(
 ) : Handler {
 
     override fun accept(command: String, user: User?): Boolean {
-        return user != null && Status.REG_PROFILE_URL == user.status
+        return user != null && Status.REG_PROFILE == user.status
     }
 
     override fun handle(update: Update, user: User?) {
@@ -36,7 +36,7 @@ class FinishInputProfileHandler(
             throw RandomCoffeeBotException("Error user state for message $update")
         }
 
-        user.profileUrl = update.getMessageText()
+        user.description = update.getMessageText()
 
         val previousStatus = user.previousStatus
         if (previousStatus != null) {

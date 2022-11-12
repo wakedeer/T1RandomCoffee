@@ -7,6 +7,7 @@ object Message {
 
     val WELCOME: String = loadTemplate("/message/welcome.md")
     val PROFILE: String = loadTemplate("/message/profile.md")
+    val QUESTIONS: String = loadTemplate("/message/questions.md")
     val ERROR: String = loadTemplate("/message/error.md")
     val INFO: String = loadTemplate("/message/info.md")
 

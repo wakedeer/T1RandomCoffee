@@ -1,5 +1,6 @@
 package inno.tech.service.message
 
+import inno.tech.model.Topic
 import inno.tech.model.User
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup
 
@@ -18,8 +19,9 @@ interface MessageService {
      * Отправляет приглашение участнику.
      * @param user участник, которому отправляется приглашение
      * @param partner информация о партнёре участника
+     * @param topic тема встречи
      */
-    fun sendInvitationMessage(user: User, partner: User)
+    fun sendInvitationMessage(user: User, partner: User, topic: Topic)
 
     /**
      * Отправляет шаблонизирование сообщение.

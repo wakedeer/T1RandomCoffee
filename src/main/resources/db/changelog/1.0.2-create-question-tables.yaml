@@ -1,0 +1,63 @@
+databaseChangeLog:
+  - changeSet:
+      id: create-question_tables
+      author: amironov
+      changes:
+        - createTable:
+            tableName: TOPICS
+            columns:
+              - column:
+                  name: ID
+                  type: bigint
+                  constraints:
+                    primaryKey: true
+                    primaryKeyName: pk_topic
+              - column:
+                  name: NAME
+                  type: varchar(50)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: LEVEL
+                  type: varchar(2)
+        - createTable:
+            tableName: QUESTIONS
+            columns:
+              - column:
+                  name: ID
+                  type: serial
+                  constraints:
+                    primaryKey: true
+                    primaryKeyName: pk_question
+              - column:
+                  name: TOPIC_ID
+                  type: bigint
+                  constraints:
+                    nullable: false
+                    foreignKeyName: fk_question_topic
+                    references: TOPICS(ID)
+              - column:
+                  name: CONTENT
+                  type: text
+                  constraints:
+                    nullable: false
+  - changeSet:
+      id: clean-up-meeting-history
+      author: amironov
+      changes:
+        - delete:
+            tableName: MEETINGS
+  - changeSet:
+      id: add-meeting-topic-column
+      author: amironov
+      changes:
+        - addColumn:
+            tableName: MEETINGS
+            columns:
+              - column:
+                  name: TOPIC_ID
+                  type: bigint
+                  constraints:
+                    nullable: false
+                    foreignKeyName: fk_meeting_topic
+                    references: TOPICS(ID)

@@ -3,6 +3,7 @@ package inno.tech.service.message
 import inno.tech.TelegramBotApi
 import inno.tech.constant.Command
 import inno.tech.constant.Message
+import inno.tech.model.Topic
 import inno.tech.model.User
 import org.springframework.stereotype.Service
 import org.telegram.telegrambots.meta.api.methods.ParseMode
@@ -11,6 +12,11 @@ import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMa
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKeyboardButton
 import java.text.MessageFormat
 
+/**
+ * Сервис отправки сообщений в Telegram.
+ *
+ * @param telegramBotApi компонент, предоставляющий доступ к Telegram Bot API
+ */
 @Service
 class TelegramMessageService(
     private val telegramBotApi: TelegramBotApi,
@@ -44,19 +50,9 @@ class TelegramMessageService(
         val fullName = user.fullName ?: DATA_IS_NOT_DEFINED
         val city = user.city ?: DATA_IS_NOT_DEFINED
         val level = user.level?.toString() ?: DATA_IS_NOT_DEFINED
-        val profileUrl = user.profileUrl ?: DATA_IS_NOT_DEFINED
+        val description = user.description ?: DATA_IS_NOT_DEFINED
 
-        sendMessageWithKeyboard(user.chatId.toString(), contactPartnerBtn(user), Message.PROFILE, arrayOf(fullName, city, level, profileUrl))
-    }
-
-    override fun sendInvitationMessage(user: User, partner: User) {
-
-        val profileUrl = partner.profileUrl ?: DATA_IS_NOT_DEFINED
-        val fullName = partner.fullName ?: DATA_IS_NOT_DEFINED
-        val level = partner.level?.name ?: DATA_IS_NOT_DEFINED
-        val city = partner.city ?: DATA_IS_NOT_DEFINED
-
-        sendMessageWithKeyboard(user.chatId.toString(), contactPartnerBtn(partner), Message.MATCH_INVITATION, arrayOf(fullName, city, level, profileUrl))
+        sendMessageWithKeyboard(user.chatId.toString(), contactPartnerBtn(user), Message.PROFILE, arrayOf(fullName, city, level, description))
     }
 
     private fun contactPartnerBtn(partner: User): InlineKeyboardMarkup {
@@ -68,6 +64,35 @@ class TelegramMessageService(
         return InlineKeyboardMarkup().apply {
             keyboard = listOf(
                 listOf(contactPartner),
+            )
+        }
+    }
+
+    override fun sendInvitationMessage(user: User, partner: User, topic: Topic) {
+        val description = partner.description ?: DATA_IS_NOT_DEFINED
+        val fullName = partner.fullName ?: DATA_IS_NOT_DEFINED
+        val level = partner.level?.name ?: DATA_IS_NOT_DEFINED
+        val city = partner.city ?: DATA_IS_NOT_DEFINED
+        val topicName = topic.name
+
+        val args = arrayOf(fullName, city, level, description, topicName)
+        sendMessageWithKeyboard(user.chatId.toString(), invitationKeyboard(partner, topic), Message.MATCH_INVITATION, args)
+    }
+
+    private fun invitationKeyboard(partner: User, topic: Topic): InlineKeyboardMarkup {
+        val contactPartner = InlineKeyboardButton().apply {
+            val name = partner.fullName ?: ""
+            text = "Telegram $name link"
+            url = "tg://user?id=${partner.userId}"
+        }
+        val showTopicBtn = InlineKeyboardButton().apply {
+            text = "Topic ${topic.name} questions"
+            callbackData = Command.SHOW_QUESTIONS.command + topic.id
+        }
+        return InlineKeyboardMarkup().apply {
+            keyboard = listOf(
+                listOf(contactPartner),
+                listOf(showTopicBtn),
             )
         }
     }

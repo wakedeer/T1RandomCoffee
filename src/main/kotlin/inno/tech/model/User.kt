@@ -17,22 +17,22 @@ import javax.persistence.Table
 @Table(name = "USERS")
 class User(
 
-    /** Идентификатор */
+    /** Идентификатор пользователя в Telegram */
     @Id
     @Column(name = "USER_ID")
     var userId: Long,
 
-    /** Идентификатор чата  */
+    /** Идентификатор чата в Telegram */
     @Column(name = "CHAT_ID")
     var chatId: Long,
-
-    /** Имя */
-    @Column(name = "FULL_NAME")
-    var fullName: String? = null,
 
     /** Никнейм */
     @Column(name = "USERNAME")
     var username: String? = null,
+
+    /** Имя */
+    @Column(name = "FULL_NAME")
+    var fullName: String? = null,
 
     /** Уровень владения языком  */
     @Enumerated(EnumType.STRING)
@@ -43,9 +43,9 @@ class User(
     @Column(name = "CITY")
     var city: String? = null,
 
-    /** Ссылка на страницу в соцсети */
-    @Column(name = "PROFILE_URL")
-    var profileUrl: String? = null,
+    /** Дополнительная информация пользователя */
+    @Column(name = "PROFILE")
+    var description: String? = null,
 
     /** Текущий статус пользователя */
     @Enumerated(EnumType.STRING)

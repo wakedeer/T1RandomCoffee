@@ -1,0 +1,9 @@
+databaseChangeLog:
+  - changeSet:
+      id: update-profile-field-purpose
+      author: amironov
+      changes:
+        - renameColumn:
+            tableName: USERS
+            oldColumnName: PROFILE_URL
+            newColumnName: PROFILE
