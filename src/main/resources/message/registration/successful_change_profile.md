@@ -1,1 +1,1 @@
-Everything''s ready for you to take a part in Innotech\.English Random Coffee\.  ✅
+Everything''s ready for you to take a part in English Random Coffee\.  ✅
