@@ -4,7 +4,7 @@ services:
   postgres:
     image: 'postgres:14.1'
     environment:
-      POSTGRES_DB: 'eng_random_coffee'
+      POSTGRES_DB: 'random_coffee'
       POSTGRES_USER: 'random'
       POSTGRES_PASSWORD: 'coffee2022!'
     ports:
