@@ -16,11 +16,12 @@ import java.text.MessageFormat
  * Сервис отправки сообщений в Telegram.
  *
  * @param telegramBotApi компонент, предоставляющий доступ к Telegram Bot API
+ * @param messageProvider компонент, содержащий шаблоны сообщений
  */
 @Service
 class TelegramMessageService(
     private val telegramBotApi: TelegramBotApi,
-    private val messageProvider : MessageProvider,
+    private val messageProvider: MessageProvider,
 ) : MessageService {
 
     override fun sendMessage(chatId: String, template: String, args: Array<String>) {

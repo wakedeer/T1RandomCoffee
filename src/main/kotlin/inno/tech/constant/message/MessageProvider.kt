@@ -1,7 +1,7 @@
 package inno.tech.constant.message
 
 /**
- * Шаблоны сообщений.
+ * Общий класс содержащий шаблоны сообщений.
  */
 abstract class MessageProvider {
 

@@ -13,11 +13,12 @@ import org.telegram.telegrambots.meta.api.objects.Update
  * Обработчик возобновления отправки сообщений пользователю.
  *
  * @param messageService сервис отправки сообщений
+ * @param messageProvider компонент, содержащий шаблоны сообщений
  */
 @Component
 class ResumeHandler(
     private val messageService: MessageService,
-    private val messageProvider : MessageProvider,
+    private val messageProvider: MessageProvider,
 ) : Handler {
 
     override fun accept(command: String, user: User?): Boolean {

@@ -2,9 +2,9 @@ package inno.tech.service.subscription
 
 import inno.tech.constant.Command
 import inno.tech.constant.Level
-import inno.tech.constant.message.MessageProvider
 import inno.tech.constant.SendInvitationStatus
 import inno.tech.constant.Status
+import inno.tech.constant.message.MessageProvider
 import inno.tech.model.Meeting
 import inno.tech.model.User
 import inno.tech.repository.MeetingRepository
@@ -26,6 +26,7 @@ import java.util.LinkedList
  * @param userRepository репозиторий для работы с информацией о пользователе
  * @param meetingRepository репозиторий для работы с информацией о встречах
  * @param messageService сервис отправки сообщений
+ * @param messageProvider компонент, содержащий шаблоны сообщений
  */
 @Service
 class SubscriptionService(

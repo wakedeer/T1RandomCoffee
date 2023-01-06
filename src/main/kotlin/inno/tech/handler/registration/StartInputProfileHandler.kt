@@ -2,8 +2,8 @@ package inno.tech.handler.registration
 
 import inno.tech.constant.COMMON_STATUSES
 import inno.tech.constant.Command
-import inno.tech.constant.message.MessageProvider
 import inno.tech.constant.Status
+import inno.tech.constant.message.MessageProvider
 import inno.tech.extension.getChatId
 import inno.tech.extension.getChatIdAsString
 import inno.tech.extension.getUserId
@@ -23,13 +23,14 @@ import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKe
  *
  * @param userRepository репозиторий для работы с информацией о пользователе
  * @param messageService сервис отправки сообщений
+ * @param messageProvider компонент, содержащий шаблоны сообщений
  */
 @Order(Ordered.HIGHEST_PRECEDENCE)
 @Component
 class StartInputProfileHandler(
     private val userRepository: UserRepository,
     private val messageService: MessageService,
-    private val messageProvider : MessageProvider,
+    private val messageProvider: MessageProvider,
 ) : Handler {
 
     override fun accept(command: String, user: User?): Boolean {

@@ -16,13 +16,14 @@ import org.telegram.telegrambots.meta.api.objects.Update
  *
  * @param messageService сервис отправки сообщений
  * @param buildProperties параметры сборки приложения
+ * @param messageProvider компонент, содержащий шаблоны сообщений
  */
 @Component
 class InfoHandler(
     private val messageService: MessageService,
     private val buildProperties: BuildProperties,
     private val userRepository: UserRepository,
-    private val messageProvider : MessageProvider,
+    private val messageProvider: MessageProvider,
 ) : Handler {
 
     override fun accept(command: String, user: User?): Boolean {

@@ -19,13 +19,14 @@ import org.telegram.telegrambots.meta.api.objects.Update
  * @param messageService сервис отправки сообщений
  * @param topicRepository репозиторий для работы с топиками вопросов
  * @param questionsRepository репозиторий для работы с вопросами
+ * @param messageProvider компонент, содержащий шаблоны сообщений
  */
 @Component
 class ShowTopicHandler(
     private val messageService: MessageService,
     private val topicRepository: TopicRepository,
     private val questionsRepository: QuestionsRepository,
-    private val messageProvider : MessageProvider,
+    private val messageProvider: MessageProvider,
 ) : Handler {
     override fun accept(command: String, user: User?): Boolean {
         return command.startsWith(Command.SHOW_QUESTIONS.command)

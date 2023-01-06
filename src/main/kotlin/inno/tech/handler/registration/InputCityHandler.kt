@@ -1,7 +1,7 @@
 package inno.tech.handler.registration
 
-import inno.tech.constant.message.MessageProvider
 import inno.tech.constant.Status
+import inno.tech.constant.message.MessageProvider
 import inno.tech.exception.RandomCoffeeBotException
 import inno.tech.extension.createBtn
 import inno.tech.extension.getChatIdAsString
@@ -13,10 +13,16 @@ import org.springframework.stereotype.Component
 import org.telegram.telegrambots.meta.api.objects.Update
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup
 
+/**
+ * Обработчик сообщений заполнения местоположения пользователя.
+ *
+ * @param messageService сервис отправки сообщений
+ * @param messageProvider компонент, содержащий шаблоны сообщений
+ */
 @Component
 class InputCityHandler(
     private val messageService: MessageService,
-    private val messageProvider : MessageProvider,
+    private val messageProvider: MessageProvider,
 ) : Handler {
 
     override fun accept(command: String, user: User?): Boolean {

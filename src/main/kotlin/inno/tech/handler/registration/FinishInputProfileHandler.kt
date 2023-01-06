@@ -1,7 +1,7 @@
 package inno.tech.handler.registration
 
-import inno.tech.constant.message.MessageProvider
 import inno.tech.constant.Status
+import inno.tech.constant.message.MessageProvider
 import inno.tech.exception.RandomCoffeeBotException
 import inno.tech.extension.getChatIdAsString
 import inno.tech.extension.getMessageText
@@ -19,13 +19,14 @@ import org.telegram.telegrambots.meta.api.objects.Update
  * @param subscriptionService сервис отправки уведомлений пользователям
  * @param userRepository репозиторий для работы с информацией о пользователях
  * @param messageService сервис отправки сообщений
+ * @param messageProvider компонент, содержащий шаблоны сообщений
  */
 @Component
 class FinishInputProfileHandler(
     private val subscriptionService: SubscriptionService,
     private val userRepository: UserRepository,
     private val messageService: MessageService,
-    private val messageProvider : MessageProvider,
+    private val messageProvider: MessageProvider,
 ) : Handler {
 
     override fun accept(command: String, user: User?): Boolean {

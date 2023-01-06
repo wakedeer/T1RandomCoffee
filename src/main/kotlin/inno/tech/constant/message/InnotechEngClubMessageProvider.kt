@@ -1,5 +1,8 @@
 package inno.tech.constant.message
 
+/**
+ * Класс содержащий шаблоны сообщений для Иннотех.
+ */
 class InnotechEngClubMessageProvider : MessageProvider() {
 
     override val welcome: String = loadTemplate("/message/innotech/welcome.md")

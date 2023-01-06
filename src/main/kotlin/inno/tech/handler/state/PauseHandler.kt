@@ -14,11 +14,12 @@ import org.telegram.telegrambots.meta.api.objects.Update
  * Обработчик приостановки пользователем получений сообщений от бота.
  *
  * @param messageService сервис отправки сообщений
+ * @param messageProvider компонент, содержащий шаблоны сообщений
  */
 @Component
 class PauseHandler(
     private val messageService: MessageService,
-    private val messageProvider : MessageProvider,
+    private val messageProvider: MessageProvider,
 ) : Handler {
 
     override fun accept(command: String, user: User?) = user != null && Command.PAUSE.command == command
