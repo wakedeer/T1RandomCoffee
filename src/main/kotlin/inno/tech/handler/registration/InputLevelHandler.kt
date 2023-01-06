@@ -18,6 +18,7 @@ import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMa
 @Component
 class InputLevelHandler(
     private val messageService: MessageService,
+    private val messageProvider : Message,
 ) : Handler {
 
     override fun accept(command: String, user: User?): Boolean {
@@ -32,14 +33,14 @@ class InputLevelHandler(
         val level = try {
             Level.valueOf(update.getMessageText())
         } catch (e: IllegalArgumentException) {
-            messageService.sendMessageWithKeyboard(update.getChatIdAsString(), LEVELS, Message.REG_STEP_2)
+            messageService.sendMessageWithKeyboard(update.getChatIdAsString(), LEVELS, messageProvider.REG_STEP_2)
             return
         }
 
         user.level = level
         user.status = Status.REG_CITY
 
-        messageService.sendMessageWithKeyboard(update.getChatIdAsString(), CITIES, Message.REG_STEP_3)
+        messageService.sendMessageWithKeyboard(update.getChatIdAsString(), CITIES, messageProvider.REG_STEP_3)
     }
 
     companion object {

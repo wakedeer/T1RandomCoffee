@@ -3,7 +3,6 @@ package inno.tech.service.subscription
 import inno.tech.constant.Command
 import inno.tech.constant.Level
 import inno.tech.constant.Message
-import inno.tech.constant.Message.MATCH_FAILURE_SEND_TO_PARTNER
 import inno.tech.constant.SendInvitationStatus
 import inno.tech.constant.Status
 import inno.tech.model.Meeting
@@ -34,6 +33,7 @@ class SubscriptionService(
     private val meetingRepository: MeetingRepository,
     private val messageService: MessageService,
     private val topicRepository: TopicRepository,
+    private val messageProvider: Message,
 ) {
 
     /** Logger. */
@@ -85,7 +85,7 @@ class SubscriptionService(
 
         // set unscheduled status for other
         nextLevelParticipants.forEach { participant: User ->
-            sendFailure(participant, Message.MATCH_FAILURE)
+            sendFailure(participant, messageProvider.MATCH_FAILURE)
             participant.status = Status.UNPAIRED
             log.info("User ${participant.userId} hasn't been matched")
         }
@@ -105,7 +105,7 @@ class SubscriptionService(
         try {
             messageService.sendInvitationMessage(secondUser, firstUser, topic)
         } catch (e: Exception) {
-            messageService.sendMessage(firstUser.userId.toString(), MATCH_FAILURE_SEND_TO_PARTNER)
+            messageService.sendMessage(firstUser.userId.toString(), messageProvider.MATCH_FAILURE_SEND_TO_PARTNER)
             log.error("Error occurred sending match message to pair ${firstUser.userId} and ${secondUser.userId}", e)
             return SendInvitationStatus.SECOND_ERROR
         }
@@ -128,7 +128,7 @@ class SubscriptionService(
         participants.forEach { participant: User ->
             participant.status = Status.ASKED
             try {
-                messageService.sendMessageWithKeyboard(participant.chatId.toString(), SUGGESTION_MENU, Message.MATCH_SUGGESTION)
+                messageService.sendMessageWithKeyboard(participant.chatId.toString(), SUGGESTION_MENU, messageProvider.MATCH_SUGGESTION)
             } catch (ex: Exception) {
                 if (ex is TelegramApiRequestException && 403 == ex.errorCode) {
                     log.warn("User ${participant.userId} unsubscribed from the bot. Deactivate user", ex)

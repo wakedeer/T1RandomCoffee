@@ -15,6 +15,7 @@ import org.telegram.telegrambots.meta.api.objects.Update
 @Component
 class InputNameHandler(
     private val messageService: MessageService,
+    private val messageProvider : Message,
 ) : Handler {
 
     override fun accept(command: String, user: User?): Boolean {
@@ -29,6 +30,6 @@ class InputNameHandler(
         user.fullName = update.getMessageText()
         user.status = Status.REG_LEVEL
 
-        messageService.sendMessageWithKeyboard(update.getChatIdAsString(), LEVELS, Message.REG_STEP_2)
+        messageService.sendMessageWithKeyboard(update.getChatIdAsString(), LEVELS, messageProvider.REG_STEP_2)
     }
 }

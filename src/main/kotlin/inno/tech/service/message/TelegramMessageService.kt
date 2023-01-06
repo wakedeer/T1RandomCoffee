@@ -20,6 +20,7 @@ import java.text.MessageFormat
 @Service
 class TelegramMessageService(
     private val telegramBotApi: TelegramBotApi,
+    private val messageProvider : Message,
 ) : MessageService {
 
     override fun sendMessage(chatId: String, template: String, args: Array<String>) {
@@ -43,7 +44,7 @@ class TelegramMessageService(
     }
 
     override fun sendErrorMessage(chatId: Long) {
-        sendMessageWithKeyboard(chatId.toString(), MAIN_MENU, Message.ERROR)
+        sendMessageWithKeyboard(chatId.toString(), MAIN_MENU, messageProvider.ERROR)
     }
 
     override fun sendProfileInfoMessage(user: User) {
@@ -52,7 +53,7 @@ class TelegramMessageService(
         val level = user.level?.toString() ?: DATA_IS_NOT_DEFINED
         val description = user.description ?: DATA_IS_NOT_DEFINED
 
-        sendMessageWithKeyboard(user.chatId.toString(), contactPartnerBtn(user), Message.PROFILE, arrayOf(fullName, city, level, description))
+        sendMessageWithKeyboard(user.chatId.toString(), contactPartnerBtn(user), messageProvider.PROFILE, arrayOf(fullName, city, level, description))
     }
 
     private fun contactPartnerBtn(partner: User): InlineKeyboardMarkup {
@@ -76,7 +77,7 @@ class TelegramMessageService(
         val topicName = topic.name
 
         val args = arrayOf(fullName, city, level, description, topicName)
-        sendMessageWithKeyboard(user.chatId.toString(), invitationKeyboard(partner, topic), Message.MATCH_INVITATION, args)
+        sendMessageWithKeyboard(user.chatId.toString(), invitationKeyboard(partner, topic), messageProvider.MATCH_INVITATION, args)
     }
 
     private fun invitationKeyboard(partner: User, topic: Topic): InlineKeyboardMarkup {

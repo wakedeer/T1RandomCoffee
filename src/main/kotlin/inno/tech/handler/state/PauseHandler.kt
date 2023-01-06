@@ -18,6 +18,7 @@ import org.telegram.telegrambots.meta.api.objects.Update
 @Component
 class PauseHandler(
     private val messageService: MessageService,
+    private val messageProvider : Message,
 ) : Handler {
 
     override fun accept(command: String, user: User?) = user != null && Command.PAUSE.command == command
@@ -29,6 +30,6 @@ class PauseHandler(
 
         user.active = false
 
-        messageService.sendMessage(update.getChatIdAsString(), Message.STATUS_PAUSE)
+        messageService.sendMessage(update.getChatIdAsString(), messageProvider.STATUS_PAUSE)
     }
 }

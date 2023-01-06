@@ -25,6 +25,7 @@ class FinishInputProfileHandler(
     private val subscriptionService: SubscriptionService,
     private val userRepository: UserRepository,
     private val messageService: MessageService,
+    private val messageProvider : Message,
 ) : Handler {
 
     override fun accept(command: String, user: User?): Boolean {
@@ -44,11 +45,11 @@ class FinishInputProfileHandler(
             user.status = previousStatus
             user.previousStatus = null
 
-            messageService.sendMessage(update.getChatIdAsString(), Message.SUCCESSFUL_CHANGE_PROFILE)
+            messageService.sendMessage(update.getChatIdAsString(), messageProvider.SUCCESSFUL_CHANGE_PROFILE)
             messageService.sendProfileInfoMessage(user)
         } else {
             //try to find a pair for the new user
-            messageService.sendMessage(update.getChatIdAsString(), Message.SUCCESSFUL_SIGN_UP)
+            messageService.sendMessage(update.getChatIdAsString(), messageProvider.SUCCESSFUL_SIGN_UP)
 
             val level = user.level ?: throw RandomCoffeeBotException("level should be filled")
             val readyUser = userRepository.findAllByStatusInAndLevelAndActiveTrue(listOf(Status.READY, Status.UNPAIRED), level).firstOrNull()

@@ -29,6 +29,7 @@ import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKe
 class StartInputProfileHandler(
     private val userRepository: UserRepository,
     private val messageService: MessageService,
+    private val messageProvider : Message,
 ) : Handler {
 
     override fun accept(command: String, user: User?): Boolean {
@@ -37,7 +38,7 @@ class StartInputProfileHandler(
 
     override fun handle(update: Update, user: User?) {
         val chatId = update.getChatIdAsString()
-        messageService.sendMessage(chatId, Message.WELCOME)
+        messageService.sendMessage(chatId, messageProvider.WELCOME)
 
         val telegramUsername = update.message?.from?.userName
         val u = if (user != null && user.status in COMMON_STATUSES) {
@@ -60,9 +61,9 @@ class StartInputProfileHandler(
         val fullName = extractFullName(update)
         if (fullName != null) {
             val keyboard = createSuggestedNameKeyboard(fullName)
-            messageService.sendMessageWithKeyboard(chatId, keyboard, Message.REG_STEP_1)
+            messageService.sendMessageWithKeyboard(chatId, keyboard, messageProvider.REG_STEP_1)
         } else {
-            messageService.sendMessage(chatId, Message.REG_STEP_1)
+            messageService.sendMessage(chatId, messageProvider.REG_STEP_1)
         }
     }
 

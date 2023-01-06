@@ -25,6 +25,7 @@ class ShowTopicHandler(
     private val messageService: MessageService,
     private val topicRepository: TopicRepository,
     private val questionsRepository: QuestionsRepository,
+    private val messageProvider : Message,
 ) : Handler {
     override fun accept(command: String, user: User?): Boolean {
         return command.startsWith(Command.SHOW_QUESTIONS.command)
@@ -38,7 +39,7 @@ class ShowTopicHandler(
             .mapIndexed { index, question -> "${index + 1}. ${question.content}" }
             .joinToString(separator = "\n")
 
-        messageService.sendMessage(update.getChatIdAsString(), Message.QUESTIONS, arrayOf(topic.name, questionText))
+        messageService.sendMessage(update.getChatIdAsString(), messageProvider.QUESTIONS, arrayOf(topic.name, questionText))
     }
 
     /**

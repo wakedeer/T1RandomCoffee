@@ -18,6 +18,7 @@ import org.telegram.telegrambots.meta.api.objects.Update
 @Component
 class ReadyHandler(
     private val messageService: MessageService,
+    private val messageProvider : Message,
 ) : Handler {
 
     override fun accept(command: String, user: User?): Boolean {
@@ -31,6 +32,6 @@ class ReadyHandler(
 
         user.status = Status.READY
 
-        messageService.sendMessage(user.chatId.toString(), Message.READY_TO_MATCH)
+        messageService.sendMessage(user.chatId.toString(), messageProvider.READY_TO_MATCH)
     }
 }

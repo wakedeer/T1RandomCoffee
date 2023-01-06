@@ -17,6 +17,7 @@ import org.telegram.telegrambots.meta.api.objects.Update
 @Component
 class ResumeHandler(
     private val messageService: MessageService,
+    private val messageProvider : Message,
 ) : Handler {
 
     override fun accept(command: String, user: User?): Boolean {
@@ -30,6 +31,6 @@ class ResumeHandler(
 
         user.active = true
 
-        messageService.sendMessage(user.chatId.toString(), Message.STATUS_RESUME)
+        messageService.sendMessage(user.chatId.toString(), messageProvider.STATUS_RESUME)
     }
 }

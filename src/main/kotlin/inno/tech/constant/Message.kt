@@ -1,9 +1,12 @@
 package inno.tech.constant
 
+import org.springframework.stereotype.Component
+
 /**
  * Шаблоны сообщений.
  */
-object Message {
+@Component
+class Message {
 
     val WELCOME: String = loadTemplate("/message/welcome.md")
     val PROFILE: String = loadTemplate("/message/profile.md")

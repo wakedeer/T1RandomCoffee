@@ -19,6 +19,7 @@ import org.telegram.telegrambots.meta.api.objects.Update
 @Component
 class SkipHandler(
     private val messageService: MessageService,
+    private val messageProvider: Message,
 ) : Handler {
 
     override fun accept(command: String, user: User?): Boolean {
@@ -32,6 +33,6 @@ class SkipHandler(
 
         user.status = Status.SKIP
 
-        messageService.sendMessage(user.userId.toString(), Message.MATCH_SKIP)
+        messageService.sendMessage(user.userId.toString(), messageProvider.MATCH_SKIP)
     }
 }
