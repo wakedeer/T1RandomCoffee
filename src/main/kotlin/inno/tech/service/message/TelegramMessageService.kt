@@ -2,7 +2,7 @@ package inno.tech.service.message
 
 import inno.tech.TelegramBotApi
 import inno.tech.constant.Command
-import inno.tech.constant.Message
+import inno.tech.constant.message.MessageProvider
 import inno.tech.model.Topic
 import inno.tech.model.User
 import org.springframework.stereotype.Service
@@ -20,7 +20,7 @@ import java.text.MessageFormat
 @Service
 class TelegramMessageService(
     private val telegramBotApi: TelegramBotApi,
-    private val messageProvider : Message,
+    private val messageProvider : MessageProvider,
 ) : MessageService {
 
     override fun sendMessage(chatId: String, template: String, args: Array<String>) {
@@ -44,7 +44,7 @@ class TelegramMessageService(
     }
 
     override fun sendErrorMessage(chatId: Long) {
-        sendMessageWithKeyboard(chatId.toString(), MAIN_MENU, messageProvider.ERROR)
+        sendMessageWithKeyboard(chatId.toString(), MAIN_MENU, messageProvider.error)
     }
 
     override fun sendProfileInfoMessage(user: User) {
@@ -53,7 +53,7 @@ class TelegramMessageService(
         val level = user.level?.toString() ?: DATA_IS_NOT_DEFINED
         val description = user.description ?: DATA_IS_NOT_DEFINED
 
-        sendMessageWithKeyboard(user.chatId.toString(), contactPartnerBtn(user), messageProvider.PROFILE, arrayOf(fullName, city, level, description))
+        sendMessageWithKeyboard(user.chatId.toString(), contactPartnerBtn(user), messageProvider.profile, arrayOf(fullName, city, level, description))
     }
 
     private fun contactPartnerBtn(partner: User): InlineKeyboardMarkup {
@@ -77,7 +77,7 @@ class TelegramMessageService(
         val topicName = topic.name
 
         val args = arrayOf(fullName, city, level, description, topicName)
-        sendMessageWithKeyboard(user.chatId.toString(), invitationKeyboard(partner, topic), messageProvider.MATCH_INVITATION, args)
+        sendMessageWithKeyboard(user.chatId.toString(), invitationKeyboard(partner, topic), messageProvider.matchInvitation, args)
     }
 
     private fun invitationKeyboard(partner: User, topic: Topic): InlineKeyboardMarkup {

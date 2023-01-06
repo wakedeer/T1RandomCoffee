@@ -1,7 +1,7 @@
 package inno.tech.handler.state
 
 import inno.tech.constant.Command
-import inno.tech.constant.Message
+import inno.tech.constant.message.MessageProvider
 import inno.tech.exception.RandomCoffeeBotException
 import inno.tech.extension.getChatIdAsString
 import inno.tech.handler.Handler
@@ -18,7 +18,7 @@ import org.telegram.telegrambots.meta.api.objects.Update
 @Component
 class PauseHandler(
     private val messageService: MessageService,
-    private val messageProvider : Message,
+    private val messageProvider : MessageProvider,
 ) : Handler {
 
     override fun accept(command: String, user: User?) = user != null && Command.PAUSE.command == command
@@ -30,6 +30,6 @@ class PauseHandler(
 
         user.active = false
 
-        messageService.sendMessage(update.getChatIdAsString(), messageProvider.STATUS_PAUSE)
+        messageService.sendMessage(update.getChatIdAsString(), messageProvider.statusPause)
     }
 }

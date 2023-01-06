@@ -1,6 +1,6 @@
 package inno.tech.handler.registration
 
-import inno.tech.constant.Message
+import inno.tech.constant.message.MessageProvider
 import inno.tech.constant.Status
 import inno.tech.exception.RandomCoffeeBotException
 import inno.tech.extension.createBtn
@@ -16,7 +16,7 @@ import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMa
 @Component
 class InputCityHandler(
     private val messageService: MessageService,
-    private val messageProvider : Message,
+    private val messageProvider : MessageProvider,
 ) : Handler {
 
     override fun accept(command: String, user: User?): Boolean {
@@ -31,7 +31,7 @@ class InputCityHandler(
         user.city = update.getMessageText()
         user.status = Status.REG_PROFILE
 
-        messageService.sendMessage(update.getChatIdAsString(), messageProvider.REG_STEP_4)
+        messageService.sendMessage(update.getChatIdAsString(), messageProvider.regStepProfile)
     }
 
     companion object {

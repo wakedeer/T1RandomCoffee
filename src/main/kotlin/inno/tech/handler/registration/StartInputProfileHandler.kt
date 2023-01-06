@@ -2,7 +2,7 @@ package inno.tech.handler.registration
 
 import inno.tech.constant.COMMON_STATUSES
 import inno.tech.constant.Command
-import inno.tech.constant.Message
+import inno.tech.constant.message.MessageProvider
 import inno.tech.constant.Status
 import inno.tech.extension.getChatId
 import inno.tech.extension.getChatIdAsString
@@ -29,7 +29,7 @@ import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKe
 class StartInputProfileHandler(
     private val userRepository: UserRepository,
     private val messageService: MessageService,
-    private val messageProvider : Message,
+    private val messageProvider : MessageProvider,
 ) : Handler {
 
     override fun accept(command: String, user: User?): Boolean {
@@ -38,7 +38,7 @@ class StartInputProfileHandler(
 
     override fun handle(update: Update, user: User?) {
         val chatId = update.getChatIdAsString()
-        messageService.sendMessage(chatId, messageProvider.WELCOME)
+        messageService.sendMessage(chatId, messageProvider.welcome)
 
         val telegramUsername = update.message?.from?.userName
         val u = if (user != null && user.status in COMMON_STATUSES) {
@@ -61,9 +61,9 @@ class StartInputProfileHandler(
         val fullName = extractFullName(update)
         if (fullName != null) {
             val keyboard = createSuggestedNameKeyboard(fullName)
-            messageService.sendMessageWithKeyboard(chatId, keyboard, messageProvider.REG_STEP_1)
+            messageService.sendMessageWithKeyboard(chatId, keyboard, messageProvider.regStepName)
         } else {
-            messageService.sendMessage(chatId, messageProvider.REG_STEP_1)
+            messageService.sendMessage(chatId, messageProvider.regStepName)
         }
     }
 

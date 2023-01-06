@@ -1,7 +1,7 @@
 package inno.tech.handler.question
 
 import inno.tech.constant.Command
-import inno.tech.constant.Message
+import inno.tech.constant.message.MessageProvider
 import inno.tech.exception.RandomCoffeeBotException
 import inno.tech.extension.getChatIdAsString
 import inno.tech.extension.toNullable
@@ -25,7 +25,7 @@ class ShowTopicHandler(
     private val messageService: MessageService,
     private val topicRepository: TopicRepository,
     private val questionsRepository: QuestionsRepository,
-    private val messageProvider : Message,
+    private val messageProvider : MessageProvider,
 ) : Handler {
     override fun accept(command: String, user: User?): Boolean {
         return command.startsWith(Command.SHOW_QUESTIONS.command)
@@ -39,7 +39,7 @@ class ShowTopicHandler(
             .mapIndexed { index, question -> "${index + 1}. ${question.content}" }
             .joinToString(separator = "\n")
 
-        messageService.sendMessage(update.getChatIdAsString(), messageProvider.QUESTIONS, arrayOf(topic.name, questionText))
+        messageService.sendMessage(update.getChatIdAsString(), messageProvider.questions, arrayOf(topic.name, questionText))
     }
 
     /**

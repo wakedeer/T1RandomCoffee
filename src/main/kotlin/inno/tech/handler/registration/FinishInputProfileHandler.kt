@@ -1,6 +1,6 @@
 package inno.tech.handler.registration
 
-import inno.tech.constant.Message
+import inno.tech.constant.message.MessageProvider
 import inno.tech.constant.Status
 import inno.tech.exception.RandomCoffeeBotException
 import inno.tech.extension.getChatIdAsString
@@ -25,7 +25,7 @@ class FinishInputProfileHandler(
     private val subscriptionService: SubscriptionService,
     private val userRepository: UserRepository,
     private val messageService: MessageService,
-    private val messageProvider : Message,
+    private val messageProvider : MessageProvider,
 ) : Handler {
 
     override fun accept(command: String, user: User?): Boolean {
@@ -45,11 +45,11 @@ class FinishInputProfileHandler(
             user.status = previousStatus
             user.previousStatus = null
 
-            messageService.sendMessage(update.getChatIdAsString(), messageProvider.SUCCESSFUL_CHANGE_PROFILE)
+            messageService.sendMessage(update.getChatIdAsString(), messageProvider.successfulChangeProfile)
             messageService.sendProfileInfoMessage(user)
         } else {
             //try to find a pair for the new user
-            messageService.sendMessage(update.getChatIdAsString(), messageProvider.SUCCESSFUL_SIGN_UP)
+            messageService.sendMessage(update.getChatIdAsString(), messageProvider.successfulSignUp)
 
             val level = user.level ?: throw RandomCoffeeBotException("level should be filled")
             val readyUser = userRepository.findAllByStatusInAndLevelAndActiveTrue(listOf(Status.READY, Status.UNPAIRED), level).firstOrNull()

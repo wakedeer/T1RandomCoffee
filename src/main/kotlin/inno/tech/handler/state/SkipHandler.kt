@@ -1,7 +1,7 @@
 package inno.tech.handler.state
 
 import inno.tech.constant.Command
-import inno.tech.constant.Message
+import inno.tech.constant.message.MessageProvider
 import inno.tech.constant.Status
 import inno.tech.exception.RandomCoffeeBotException
 import inno.tech.handler.Handler
@@ -19,7 +19,7 @@ import org.telegram.telegrambots.meta.api.objects.Update
 @Component
 class SkipHandler(
     private val messageService: MessageService,
-    private val messageProvider: Message,
+    private val messageProvider: MessageProvider,
 ) : Handler {
 
     override fun accept(command: String, user: User?): Boolean {
@@ -33,6 +33,6 @@ class SkipHandler(
 
         user.status = Status.SKIP
 
-        messageService.sendMessage(user.userId.toString(), messageProvider.MATCH_SKIP)
+        messageService.sendMessage(user.userId.toString(), messageProvider.matchSkip)
     }
 }

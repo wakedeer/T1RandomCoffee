@@ -1,7 +1,7 @@
 package inno.tech.handler.other
 
 import inno.tech.constant.Command
-import inno.tech.constant.Message
+import inno.tech.constant.message.MessageProvider
 import inno.tech.extension.getChatIdAsString
 import inno.tech.handler.Handler
 import inno.tech.model.User
@@ -22,7 +22,7 @@ class InfoHandler(
     private val messageService: MessageService,
     private val buildProperties: BuildProperties,
     private val userRepository: UserRepository,
-    private val messageProvider : Message,
+    private val messageProvider : MessageProvider,
 ) : Handler {
 
     override fun accept(command: String, user: User?): Boolean {
@@ -30,6 +30,6 @@ class InfoHandler(
     }
 
     override fun handle(update: Update, user: User?) {
-        messageService.sendMessage(update.getChatIdAsString(), messageProvider.INFO, arrayOf(buildProperties.version, userRepository.count().toString()))
+        messageService.sendMessage(update.getChatIdAsString(), messageProvider.info, arrayOf(buildProperties.version, userRepository.count().toString()))
     }
 }

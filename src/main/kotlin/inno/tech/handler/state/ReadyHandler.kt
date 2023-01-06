@@ -1,7 +1,7 @@
 package inno.tech.handler.state
 
 import inno.tech.constant.Command
-import inno.tech.constant.Message
+import inno.tech.constant.message.MessageProvider
 import inno.tech.constant.Status
 import inno.tech.exception.RandomCoffeeBotException
 import inno.tech.handler.Handler
@@ -18,7 +18,7 @@ import org.telegram.telegrambots.meta.api.objects.Update
 @Component
 class ReadyHandler(
     private val messageService: MessageService,
-    private val messageProvider : Message,
+    private val messageProvider : MessageProvider,
 ) : Handler {
 
     override fun accept(command: String, user: User?): Boolean {
@@ -32,6 +32,6 @@ class ReadyHandler(
 
         user.status = Status.READY
 
-        messageService.sendMessage(user.chatId.toString(), messageProvider.READY_TO_MATCH)
+        messageService.sendMessage(user.chatId.toString(), messageProvider.readyToMatch)
     }
 }

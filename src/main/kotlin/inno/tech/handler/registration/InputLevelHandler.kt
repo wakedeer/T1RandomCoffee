@@ -1,7 +1,7 @@
 package inno.tech.handler.registration
 
 import inno.tech.constant.Level
-import inno.tech.constant.Message
+import inno.tech.constant.message.MessageProvider
 import inno.tech.constant.Status
 import inno.tech.exception.RandomCoffeeBotException
 import inno.tech.extension.createBtn
@@ -18,7 +18,7 @@ import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMa
 @Component
 class InputLevelHandler(
     private val messageService: MessageService,
-    private val messageProvider : Message,
+    private val messageProvider : MessageProvider,
 ) : Handler {
 
     override fun accept(command: String, user: User?): Boolean {
@@ -33,14 +33,14 @@ class InputLevelHandler(
         val level = try {
             Level.valueOf(update.getMessageText())
         } catch (e: IllegalArgumentException) {
-            messageService.sendMessageWithKeyboard(update.getChatIdAsString(), LEVELS, messageProvider.REG_STEP_2)
+            messageService.sendMessageWithKeyboard(update.getChatIdAsString(), LEVELS, messageProvider.regStepLevel)
             return
         }
 
         user.level = level
         user.status = Status.REG_CITY
 
-        messageService.sendMessageWithKeyboard(update.getChatIdAsString(), CITIES, messageProvider.REG_STEP_3)
+        messageService.sendMessageWithKeyboard(update.getChatIdAsString(), CITIES, messageProvider.regStepCity)
     }
 
     companion object {
