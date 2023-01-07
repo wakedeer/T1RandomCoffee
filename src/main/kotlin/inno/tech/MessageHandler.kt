@@ -42,7 +42,20 @@ class MessageHandler(
 
         val user: User? = userRepository.findById(userId).toNullable()
 
+        updateUsername(update, user)
+
         handlers.firstOrNull { it.accept(command, user) }?.handle(update, user)
             ?: messageService.sendErrorMessage(update.getChatId())
+    }
+
+    /**
+     * Проверяем и обновляем имя пользователя при каждом обращении к боту.
+     * Тем самым, минимизируем вероятность отправки неправильного ника в приглашении.
+     */
+    private fun updateUsername(update: Update, user: User?) {
+        if (user != null) { //пользователь уже есть в БД
+            val telegramUsername = update.message?.from?.userName
+            user.username = telegramUsername
+        }
     }
 }
