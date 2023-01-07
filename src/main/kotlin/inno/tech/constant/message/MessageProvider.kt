@@ -19,6 +19,7 @@ abstract class MessageProvider {
     abstract val successfulChangeProfile: String
 
     val matchInvitation: String = loadTemplate("/message/common/match/invitation.md")
+    val matchInvitationWithNick: String = loadTemplate("/message/common/match/invitation_with_nickname.md")
     val matchSkip: String = loadTemplate("/message/common/match/skip.md")
     val matchSuggestion: String = loadTemplate("/message/common/match/suggestion.md")
     val readyToMatch: String = loadTemplate("/message/common/match/success.md")
