@@ -1,15 +1,16 @@
-# 🔵🔵🔵 Иннотех. Random Coffee
+# 🔵🔵🔵 Innotech.Random Coffee.EnglishClub
 
-## Общая информация
+## General
 
-Проект построен на Kotlin и Spring Framework.
+The project is built on Kotlin and Spring Boot Framework
 
+## Build and run
 
-## Сборка и запуск
+- ``gradlew clean assemble`` - build .
+- ``gradlew bootRun`` - run.
 
-- ``gradlew clean assemble`` - сборка.
-- ``gradlew bootRun`` - запуск.
+## Spring-profiles
 
-## Spring-профили проекта
-
-- ``dev`` - профиль для разработки.
+- ``dev`` - profile for run on local machine.
+- ``manual`` - profile enable to match pairs manually. Otherwise, scheduler will be used
+- ``innotech`` - profile enable Innotech specific message templates. Otherwise, general message templates will be used. 
