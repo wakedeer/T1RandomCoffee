@@ -1,24 +1,29 @@
 {
-  "properties": [
-    {
-      "name": "schedule.match",
-      "type": "java.lang.String",
-      "description": "Time to match pair."
-    },
-    {
-      "name": "schedule.invite",
-      "type": "java.lang.String",
-      "description": "Time to ask about participation."
-    },
-    {
-      "name": "telegram.name",
-      "type": "java.lang.String",
-      "description": "Bot name."
-    },
-    {
-      "name": "telegram.adminId",
-      "type": "java.lang.String",
-      "description": "Admin id."
-    }
-  ]
+    "properties": [
+        {
+            "name": "schedule.match",
+            "type": "java.lang.String",
+            "description": "Time to match pair."
+        },
+        {
+            "name": "schedule.invite",
+            "type": "java.lang.String",
+            "description": "Time to ask about participation."
+        },
+        {
+            "name": "schedule.rematch",
+            "type": "java.lang.String",
+            "description": "Ask to rematch if there isn't answer."
+        },
+        {
+            "name": "telegram.name",
+            "type": "java.lang.String",
+            "description": "Bot name."
+        },
+        {
+            "name": "telegram.adminId",
+            "type": "java.lang.String",
+            "description": "Admin id."
+        }
+    ]
 }

@@ -14,7 +14,7 @@ abstract class MessageProvider {
     val regStepName: String = loadTemplate("/message/common/registration/step1_name.md")
     val regStepLevel: String = loadTemplate("/message/common/registration/step2_level.md")
     val regStepCity: String = loadTemplate("/message/common/registration/step3_city.md")
-    val regStepProfile: String = loadTemplate("/message/common/registration/step4_profile.md")
+    abstract val regStepProfile: String
     abstract val successfulSignUp: String
     abstract val successfulChangeProfile: String
 
@@ -28,6 +28,10 @@ abstract class MessageProvider {
 
     val statusPause: String = loadTemplate("/message/common/status/pause.md")
     val statusResume: String = loadTemplate("/message/common/status/resume.md")
+
+    val rematchSuggestion: String = loadTemplate("/message/common/match/rematch_suggestion.md")
+    val rematchSearch: String = loadTemplate("/message/common/match/rematch_search.md")
+    val rematchSkip: String = loadTemplate("/message/common/match/rematch_skip.md")
 
     protected fun loadTemplate(path: String) = MessageProvider::class.java.getResource(path)?.readText()
         ?: throw IllegalArgumentException("Cannot load message template by path: $path")

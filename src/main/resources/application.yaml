@@ -17,3 +17,4 @@ telegram:
 schedule:
   invite: '0 0 7 * * SUN'
   match: '0 0 7 * * MON'
+  rematch: '0 0 7 * * WED'

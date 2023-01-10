@@ -36,4 +36,10 @@ enum class Command(val command: String) {
 
     /** Открыть вопросы топика */
     SHOW_QUESTIONS("/topic/"),
+
+    /** Запрос нового партнёра */
+    REQUEST_REMATCH("/request_rematch"),
+
+    /** Партнёр не требуется */
+    SKIP_REMATCH("/skip_rematch"),
 }

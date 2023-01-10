@@ -26,6 +26,7 @@ import java.util.LinkedList
  * @param userRepository репозиторий для работы с информацией о пользователе
  * @param meetingRepository репозиторий для работы с информацией о встречах
  * @param messageService сервис отправки сообщений
+ * @param topicRepository репозиторий для работы с топиками вопросов
  * @param messageProvider компонент, содержащий шаблоны сообщений
  */
 @Service
@@ -131,12 +132,7 @@ class SubscriptionService(
             try {
                 messageService.sendMessageWithKeyboard(participant.chatId.toString(), SUGGESTION_MENU, messageProvider.matchSuggestion)
             } catch (ex: Exception) {
-                if (ex is TelegramApiRequestException && 403 == ex.errorCode) {
-                    log.warn("User ${participant.userId} unsubscribed from the bot. Deactivate user", ex)
-                    participant.active = false
-                } else {
-                    log.error("Sending a request. Error occurred with user ${participant.userId} ", ex)
-                }
+                handleError(ex, participant)
             }
         }
         log.info("Invention sending has finished")
@@ -150,6 +146,39 @@ class SubscriptionService(
         }
     }
 
+    @Transactional
+    @Scheduled(cron = "\${schedule.rematch}")
+    fun rematch() {
+        log.info("Rematching is started")
+        val invitationGroup = listOf(Status.MATCHED)
+        val participants = userRepository.findAllByStatusInAndActiveTrue(invitationGroup)
+        participants.forEach { participant: User ->
+            participant.status = Status.ASKED
+            try {
+                messageService.sendMessageWithKeyboard(participant.chatId.toString(), REMATCH_MENU, messageProvider.rematchSuggestion)
+            } catch (ex: Exception) {
+                handleError(ex, participant)
+            }
+        }
+        log.info("Asked rematch if partner has not answer")
+    }
+
+    /**
+     * Метод обработчик ошибок отправки сообщения.
+     * В случае ошибки от Telegram деактивируем пользователя.
+     *
+     * @param ex исключение
+     * @param participant получатель сообщения
+     */
+    private fun handleError(ex: Exception, participant: User) {
+        if (ex is TelegramApiRequestException && 403 == ex.errorCode) {
+            log.warn("User ${participant.userId} unsubscribed from the bot. Deactivate user", ex)
+            participant.active = false
+        } else {
+            log.error("Sending a request. Error occurred with user ${participant.userId} ", ex)
+        }
+    }
+
     companion object {
 
         /** Сообщение о готовности участвовать в жеребьевке. */
@@ -157,6 +186,12 @@ class SubscriptionService(
 
         /** Сообщение о пропуске участия в жеребьёвке. */
         private const val SKIP_MESSAGE = "Skip one week"
+
+        /** Сообщение, что партнёры договорились. */
+        private const val OK_MESSAGE = "Yes, we have agreed"
+
+        /** Сообщение о том, что партнёр не ответил. */
+        private const val NO_RESPONSE_MESSAGE = "No response"
 
         /** Меню выбора участия в жеребьёвке. */
         val SUGGESTION_MENU = run {
@@ -170,6 +205,21 @@ class SubscriptionService(
             }
             InlineKeyboardMarkup().apply {
                 keyboard = listOf(listOf(infoBtn, showProfileBtn))
+            }
+        }
+
+        /** Меню выбора смены партнёра. */
+        val REMATCH_MENU = run {
+            val infoBtn = InlineKeyboardButton().apply {
+                text = OK_MESSAGE
+                callbackData = Command.SKIP_REMATCH.command
+            }
+            val showProfileBtn = InlineKeyboardButton().apply {
+                text = NO_RESPONSE_MESSAGE
+                callbackData = Command.REQUEST_REMATCH.command
+            }
+            InlineKeyboardMarkup().apply {
+                keyboard = listOf(listOf(infoBtn), listOf(showProfileBtn))
             }
         }
     }
