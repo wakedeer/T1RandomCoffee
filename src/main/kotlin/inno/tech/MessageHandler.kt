@@ -54,7 +54,13 @@ class MessageHandler(
      */
     private fun updateUsername(update: Update, user: User?) {
         if (user != null) { //пользователь уже есть в БД
-            val telegramUsername = update.message?.from?.userName
+            val telegramUsername = if (update.hasMessage()) {
+                update.message?.from?.userName
+            } else if (update.hasCallbackQuery()) {
+                update.callbackQuery?.from?.userName
+            } else {
+                return
+            }
             user.username = telegramUsername
         }
     }
