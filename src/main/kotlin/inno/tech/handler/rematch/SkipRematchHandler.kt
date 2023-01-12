@@ -23,7 +23,7 @@ class SkipRematchHandler(
 ) : Handler {
 
     override fun accept(command: String, user: User?): Boolean {
-        return user?.status == Status.ASKED && command == Command.SKIP_REMATCH.command
+        return user?.status == Status.SUGGEST_REMATCH && command == Command.SKIP_REMATCH.command
     }
 
     override fun handle(update: Update, user: User?) {

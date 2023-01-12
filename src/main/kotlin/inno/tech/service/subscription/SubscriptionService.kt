@@ -125,7 +125,7 @@ class SubscriptionService(
     @Scheduled(cron = "\${schedule.invite}")
     fun sendInvitation() {
         log.info("Invention sending is started")
-        val invitationGroup = listOf(Status.MATCHED, Status.ASKED, Status.UNPAIRED, Status.SKIP)
+        val invitationGroup = listOf(Status.MATCHED, Status.ASKED, Status.SUGGEST_REMATCH, Status.UNPAIRED, Status.SKIP)
         val participants = userRepository.findAllByStatusInAndActiveTrue(invitationGroup)
         participants.forEach { participant: User ->
             participant.status = Status.ASKED
@@ -153,7 +153,7 @@ class SubscriptionService(
         val invitationGroup = listOf(Status.MATCHED)
         val participants = userRepository.findAllByStatusInAndActiveTrue(invitationGroup)
         participants.forEach { participant: User ->
-            participant.status = Status.ASKED
+            participant.status = Status.SUGGEST_REMATCH
             try {
                 messageService.sendMessageWithKeyboard(participant.chatId.toString(), REMATCH_MENU, messageProvider.rematchSuggestion)
             } catch (ex: Exception) {

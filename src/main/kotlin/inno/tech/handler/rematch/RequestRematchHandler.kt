@@ -29,7 +29,7 @@ class RequestRematchHandler(
 ) : Handler {
 
     override fun accept(command: String, user: User?): Boolean {
-        return Status.ASKED == user?.status && command == Command.REQUEST_REMATCH.command
+        return Status.SUGGEST_REMATCH == user?.status && command == Command.REQUEST_REMATCH.command
     }
 
     override fun handle(update: Update, user: User?) {

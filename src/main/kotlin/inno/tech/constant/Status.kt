@@ -20,6 +20,9 @@ enum class Status {
     /** Отправлен запрос об участии на следующей неделе */
     ASKED,
 
+    /** Отправлено предложение сменить партнёра */
+    SUGGEST_REMATCH,
+
     /** Пользователь готовый к участию. Пользователь прошедший регистрацию */
     READY,
 
@@ -38,6 +41,7 @@ enum class Status {
  */
 val COMMON_STATUSES = listOf(
     Status.ASKED,
+    Status.SUGGEST_REMATCH,
     Status.READY,
     Status.MATCHED,
     Status.UNPAIRED,
