@@ -38,7 +38,7 @@ class RequestRematchHandler(
         }
         //try to find a partner for the new user
         val level = user.level ?: throw RandomCoffeeBotException("level should be filled")
-        val readyUser = userRepository.findAllByStatusInAndLevelAndActiveTrue(listOf(Status.READY, Status.UNPAIRED), level).firstOrNull()
+        val readyUser = userRepository.findAllByStatusInAndLevelAndActiveTrue(listOf(Status.READY), level).firstOrNull()
 
         if (readyUser != null) {
             // the partner has found

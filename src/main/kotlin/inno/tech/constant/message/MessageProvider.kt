@@ -23,7 +23,6 @@ abstract class MessageProvider {
     val matchSkip: String = loadTemplate("/message/common/match/skip.md")
     val matchSuggestion: String = loadTemplate("/message/common/match/suggestion.md")
     val readyToMatch: String = loadTemplate("/message/common/match/success.md")
-    val matchFailure: String = loadTemplate("/message/common/match/failure.md")
     val matchFailureSendToPartner: String = loadTemplate("/message/common/match/failure_send_msg_to_partner.md")
 
     val statusPause: String = loadTemplate("/message/common/status/pause.md")

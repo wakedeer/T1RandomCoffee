@@ -87,8 +87,6 @@ class SubscriptionService(
 
         // set unscheduled status for other
         nextLevelParticipants.forEach { participant: User ->
-            sendFailure(participant, messageProvider.matchFailure)
-            participant.status = Status.UNPAIRED
             log.info("User ${participant.userId} hasn't been matched")
         }
 
@@ -125,7 +123,7 @@ class SubscriptionService(
     @Scheduled(cron = "\${schedule.invite}")
     fun sendInvitation() {
         log.info("Invention sending is started")
-        val invitationGroup = listOf(Status.MATCHED, Status.ASKED, Status.SUGGEST_REMATCH, Status.UNPAIRED, Status.SKIP)
+        val invitationGroup = listOf(Status.MATCHED, Status.ASKED, Status.SUGGEST_REMATCH, Status.SKIP)
         val participants = userRepository.findAllByStatusInAndActiveTrue(invitationGroup)
         participants.forEach { participant: User ->
             participant.status = Status.ASKED
@@ -138,13 +136,13 @@ class SubscriptionService(
         log.info("Invention sending has finished")
     }
 
-    private fun sendFailure(user: User, reason: String) {
-        try {
-            messageService.sendMessage(user.userId.toString(), reason)
-        } catch (ex: Exception) {
-            log.error("Sending a cause of invitation failure. Error occurred with user ${user.userId} ", ex)
-        }
-    }
+//    private fun sendFailure(user: User, reason: String) {
+//        try {
+//            messageService.sendMessage(user.userId.toString(), reason)
+//        } catch (ex: Exception) {
+//            log.error("Sending a cause of invitation failure. Error occurred with user ${user.userId} ", ex)
+//        }
+//    }
 
     @Transactional
     @Scheduled(cron = "\${schedule.rematch}")

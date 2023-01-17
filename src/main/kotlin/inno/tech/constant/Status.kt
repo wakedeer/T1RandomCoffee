@@ -44,5 +44,4 @@ val COMMON_STATUSES = listOf(
     Status.SUGGEST_REMATCH,
     Status.READY,
     Status.MATCHED,
-    Status.UNPAIRED,
 )
