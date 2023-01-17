@@ -18,6 +18,7 @@ import org.springframework.transaction.annotation.Transactional
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKeyboardButton
 import org.telegram.telegrambots.meta.exceptions.TelegramApiRequestException
+import java.time.LocalDateTime
 import java.util.LinkedList
 
 
@@ -136,14 +137,6 @@ class SubscriptionService(
         log.info("Invention sending has finished")
     }
 
-//    private fun sendFailure(user: User, reason: String) {
-//        try {
-//            messageService.sendMessage(user.userId.toString(), reason)
-//        } catch (ex: Exception) {
-//            log.error("Sending a cause of invitation failure. Error occurred with user ${user.userId} ", ex)
-//        }
-//    }
-
     @Transactional
     @Scheduled(cron = "\${schedule.rematch}")
     fun rematch() {
@@ -158,7 +151,27 @@ class SubscriptionService(
                 handleError(ex, participant)
             }
         }
-        log.info("Asked rematch if partner has not answer")
+        log.info("Rematching has finished")
+    }
+
+    @Transactional
+    @Scheduled(cron = "\${schedule.remind}")
+    fun remindFillingProfile() {
+        log.info("Reminding is started")
+        val registrationStatusGroup = listOf(Status.REG_NAME, Status.REG_LEVEL, Status.REG_CITY, Status.REG_PROFILE)
+        val uncompletedProfileUsers = userRepository.findAllByStatusInAndActiveTrue(registrationStatusGroup)
+        val thresholdTime = LocalDateTime.now().minusHours(1)
+        uncompletedProfileUsers.asSequence()
+            .filter { user -> thresholdTime.isAfter(user.regDate) }
+            .forEach { user: User ->
+                try {
+                    messageService.sendMessageWithKeyboard(user.chatId.toString(), REMIND_FILL_PROFILE_MENU, messageProvider.remindFillingProfile)
+                } catch (ex: Exception) {
+                    handleError(ex, user)
+                }
+            }
+
+        log.info("Reminding has finished")
     }
 
     /**
@@ -172,6 +185,7 @@ class SubscriptionService(
         if (ex is TelegramApiRequestException && 403 == ex.errorCode) {
             log.warn("User ${participant.userId} unsubscribed from the bot. Deactivate user", ex)
             participant.active = false
+            participant.status = Status.DEACTIVATED
         } else {
             log.error("Sending a request. Error occurred with user ${participant.userId} ", ex)
         }
@@ -187,6 +201,9 @@ class SubscriptionService(
 
         /** Сообщение, что партнёры договорились. */
         private const val OK_MESSAGE = "Yes, we have agreed"
+
+        /** Сообщение продолжения регистрации. */
+        private const val CONTINUE = "Continue"
 
         /** Сообщение о том, что партнёр не ответил. */
         private const val NO_RESPONSE_MESSAGE = "No response"
@@ -218,6 +235,17 @@ class SubscriptionService(
             }
             InlineKeyboardMarkup().apply {
                 keyboard = listOf(listOf(infoBtn), listOf(showProfileBtn))
+            }
+        }
+
+        /** Меню напоминания закончить заполнение профиля. */
+        val REMIND_FILL_PROFILE_MENU = run {
+            val infoBtn = InlineKeyboardButton().apply {
+                text = CONTINUE
+                callbackData = Command.EDIT_PROFILE.command
+            }
+            InlineKeyboardMarkup().apply {
+                keyboard = listOf(listOf(infoBtn))
             }
         }
     }

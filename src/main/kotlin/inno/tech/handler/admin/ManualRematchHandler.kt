@@ -26,7 +26,7 @@ class ManualRematchHandler(
     }
 
     override fun handle(update: Update, user: User?) {
-        subscriptionService.rematch()
+        subscriptionService.remindFillingProfile()
     }
 
     companion object {

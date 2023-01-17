@@ -32,6 +32,8 @@ abstract class MessageProvider {
     val rematchSearch: String = loadTemplate("/message/common/match/rematch_search.md")
     val rematchSkip: String = loadTemplate("/message/common/match/rematch_skip.md")
 
+    val remindFillingProfile: String = loadTemplate("/message/common/remind_filling_profile.md")
+
     protected fun loadTemplate(path: String) = MessageProvider::class.java.getResource(path)?.readText()
         ?: throw IllegalArgumentException("Cannot load message template by path: $path")
 }
