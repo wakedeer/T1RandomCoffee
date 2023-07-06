@@ -53,8 +53,19 @@ class TelegramMessageService(
         val profileUrl = partner.profileUrl ?: DATA_IS_NOT_DEFINED
         val fullName = partner.fullName ?: DATA_IS_NOT_DEFINED
         val city = partner.city ?: DATA_IS_NOT_DEFINED
+        val username = partner.username
 
-        sendMessageWithKeyboard(user.chatId.toString(), contactPartnerBtn(partner), Message.MATCH_INVITATION, arrayOf(fullName, city, profileUrl))
+        val args: Array<String>
+        val template: String
+        if (username != null) {
+            template = Message.MATCH_INVITATION_WITH_NICKNAME
+            args = arrayOf(fullName, city, profileUrl, username)
+        } else {
+            template = Message.MATCH_INVITATION
+            args = arrayOf(fullName, city, profileUrl)
+        }
+
+        sendMessageWithKeyboard(user.chatId.toString(), contactPartnerBtn(partner), template, args)
     }
 
     private fun contactPartnerBtn(partner: User): InlineKeyboardMarkup {

@@ -17,6 +17,7 @@ object Message {
     val SUCCESSFUL_CHANGE_PROFILE: String = loadTemplate("/message/registration/successful_change_profile.md")
 
     val MATCH_INVITATION: String = loadTemplate("/message/match/invitation.md")
+    val MATCH_INVITATION_WITH_NICKNAME: String = loadTemplate("/message/match/invitation_with_nickname.md")
     val MATCH_SKIP: String = loadTemplate("/message/match/skip.md")
     val MATCH_SUGGESTION: String = loadTemplate("/message/match/suggestion.md")
     val READY_TO_MATCH: String = loadTemplate("/message/match/success.md")
