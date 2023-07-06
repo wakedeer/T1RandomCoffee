@@ -1,16 +1,16 @@
 spring:
   datasource:
     driver-class-name: org.postgresql.Driver
-    url: 'jdbc:postgresql://localhost:5432/random_coffee'
-    username: 'random'
-    password: 'coffee2022!'
+    url: 'jdbc:postgresql://localhost:5432/leaders_coffee'
+    username: 'leader'
+    password: 'coffee2023!'
   jpa:
     properties:
       hibernate.dialect: org.hibernate.dialect.PostgreSQLDialect
       hibernate.globally_quoted_identifiers: true
 
 telegram:
-  name: 'InnotechRandomCoffee'
+  name: 'LeadersCoffeeBot'
   adminId: 203918552
 
 # UTC time by default
