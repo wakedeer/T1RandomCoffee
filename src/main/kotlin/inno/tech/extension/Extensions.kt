@@ -13,6 +13,19 @@ fun Update.getChatId(): Long {
 }
 
 /**
+ * Возвращает ник пользователя.
+ *
+ * @return ник пользователя
+ */
+fun Update.getUserName(): String? {
+    return when {
+        this.hasMessage() -> this.message?.from?.userName
+        this.hasCallbackQuery() -> callbackQuery?.from?.userName
+        else -> null
+    }
+}
+
+/**
  * Возвращает идентификатор чата из входного сообщения.
  *
  * @return идентификатор чата

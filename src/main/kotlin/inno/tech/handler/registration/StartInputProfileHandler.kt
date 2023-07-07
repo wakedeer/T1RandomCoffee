@@ -7,6 +7,7 @@ import inno.tech.constant.Status
 import inno.tech.extension.getChatId
 import inno.tech.extension.getChatIdAsString
 import inno.tech.extension.getUserId
+import inno.tech.extension.getUserName
 import inno.tech.handler.Handler
 import inno.tech.model.User
 import inno.tech.repository.UserRepository
@@ -39,7 +40,7 @@ class StartInputProfileHandler(
         val chatId = update.getChatIdAsString()
         messageService.sendMessage(chatId, Message.WELCOME)
 
-        val telegramUsername = update.message?.from?.userName
+        val telegramUsername = update.getUserName()
         val u = if (user != null && user.status in COMMON_STATUSES) {
             user.previousStatus = user.status
             user.status = Status.REG_NAME
