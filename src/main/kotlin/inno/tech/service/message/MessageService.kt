@@ -1,6 +1,7 @@
 package inno.tech.service.message
 
 import inno.tech.model.User
+import org.telegram.telegrambots.meta.api.methods.send.SendMessage
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup
 
 /**
@@ -22,19 +23,20 @@ interface MessageService {
     fun sendInvitationMessage(user: User, partner: User)
 
     /**
-     * Отправляет шаблонизирование сообщение.
+     * Отправляет шаблонизированное сообщение.
      * @param chatId идентификатор чата адресата
      * @param template шаблон сообщения
-     * @param args список агрументов для подстановки в шаблон
+     * @param args список аргументов для подстановки в шаблон
+     * @param transformation дополнительные трансформации сообщения
      */
-    fun sendMessage(chatId: String, template: String, args: Array<String> = emptyArray())
+    fun sendMessage(chatId: String, template: String, args: Array<String> = emptyArray(), transformation: (SendMessage) -> SendMessage = { it })
 
     /**
-     * Отправляет шаблонизирование сообщение с Inline клавиатурой
+     * Отправляет шаблонизированное сообщение с Inline клавиатурой
      * @param chatId идентификатор чата адресата
      * @param replyMarkup inline клавиатура
      * @param template шаблон сообщения
-     * @param args список агрументов для подстановки в шаблон
+     * @param args список аргументов для подстановки в шаблон
      */
     fun sendMessageWithKeyboard(chatId: String, replyMarkup: InlineKeyboardMarkup, template: String, args: Array<String> = emptyArray())
 

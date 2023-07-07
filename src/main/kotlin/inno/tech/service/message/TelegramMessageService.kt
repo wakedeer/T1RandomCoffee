@@ -16,14 +16,14 @@ class TelegramMessageService(
     private val telegramBotApi: TelegramBotApi,
 ) : MessageService {
 
-    override fun sendMessage(chatId: String, template: String, args: Array<String>) {
+    override fun sendMessage(chatId: String, template: String, args: Array<String>, transformation: (SendMessage) -> SendMessage) {
         val message = SendMessage()
         message.text = MessageFormat.format(template, *sanitize(args))
         message.parseMode = ParseMode.MARKDOWNV2
         message.chatId = chatId
         message.allowSendingWithoutReply = false
 
-        telegramBotApi.execute(message)
+        telegramBotApi.execute(transformation.invoke(message))
     }
 
     override fun sendMessageWithKeyboard(chatId: String, replyMarkup: InlineKeyboardMarkup, template: String, args: Array<String>) {
