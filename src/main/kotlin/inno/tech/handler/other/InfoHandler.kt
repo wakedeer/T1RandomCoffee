@@ -5,6 +5,7 @@ import inno.tech.constant.Message
 import inno.tech.extension.getChatIdAsString
 import inno.tech.handler.Handler
 import inno.tech.model.User
+import inno.tech.repository.UserRepository
 import inno.tech.service.message.MessageService
 import org.springframework.boot.info.BuildProperties
 import org.springframework.stereotype.Component
@@ -16,11 +17,13 @@ import org.telegram.telegrambots.meta.api.objects.Update
  *
  * @param messageService сервис отправки сообщений
  * @param buildProperties параметры сборки приложения
+ * @param userRepository репозиторий для работы с информацией о пользователях
  */
 @Component
 class InfoHandler(
     private val messageService: MessageService,
     private val buildProperties: BuildProperties,
+    private val userRepository: UserRepository,
 ) : Handler {
 
     override fun accept(command: String, user: User?): Boolean {
@@ -28,7 +31,8 @@ class InfoHandler(
     }
 
     override fun handle(update: Update, user: User?) {
-        messageService.sendMessage(update.getChatIdAsString(), Message.INFO, arrayOf(buildProperties.version)) { sendMessage: SendMessage ->
+        val messageData = arrayOf(buildProperties.version, userRepository.count().toString())
+        messageService.sendMessage(update.getChatIdAsString(), Message.INFO, messageData) { sendMessage: SendMessage ->
             sendMessage.disableWebPagePreview()
             sendMessage
         }
