@@ -1,5 +1,4 @@
-# 🔵🔵🔵 Иннотех. Leaders Coffee
-[Forked from wakedeer/InnotechRandomCoffee](https://github.com/wakedeer/InnotechRandomCoffee)
+# 🔵🔵🔵 T1. Leaders Coffee
 
 ## Общая информация
 
