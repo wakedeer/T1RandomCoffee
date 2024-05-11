@@ -1,5 +1,8 @@
 spring:
-  config.activate.on-profile: dev
+  datasource:
+    url: 'jdbc:postgresql://localhost:5432/t1_data_random_coffee'
+    username: 't1_data'
+    password: 'coffee2024!'
 
 telegram:
   name: 'InnotechRandomCoffeeTestBot'

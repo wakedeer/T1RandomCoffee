@@ -1,12 +1,11 @@
 # dev use only
-version: '3.9'
 services:
   postgres:
     image: 'postgres:14.1'
     environment:
-      POSTGRES_DB: 'leaders_coffee'
-      POSTGRES_USER: 'leader'
-      POSTGRES_PASSWORD: 'coffee2023!'
+      POSTGRES_DB: 't1_data_random_coffee'
+      POSTGRES_USER: 't1_data'
+      POSTGRES_PASSWORD: 'coffee2024!'
     ports:
       - '5432:5432'
     healthcheck:

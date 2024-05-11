@@ -1,1 +1,1 @@
-Всё готово для участия в T1\. Leaders Coffee ✅
+Всё готово для участия в T1 Data\. Random Coffee ✅
