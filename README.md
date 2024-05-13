@@ -1,4 +1,4 @@
-# 🔵🔵🔵 Иннотех. Random Coffee
+# 🔵🔵🔵 T1 | Random Coffee
 
 ## Общая информация
 
