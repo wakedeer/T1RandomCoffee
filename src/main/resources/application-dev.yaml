@@ -1,5 +1,2 @@
-spring:
-  config.activate.on-profile: dev
-
 telegram:
   name: 'InnotechRandomCoffeeTestBot'
