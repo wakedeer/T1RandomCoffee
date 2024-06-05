@@ -12,7 +12,7 @@ import org.springframework.scheduling.annotation.EnableScheduling
 @SpringBootApplication
 @EnableScheduling
 @ConfigurationPropertiesScan
-class InnotechRandomCoffeeApplication
+class T1RandomCoffeeApplication
 
 /**
  * Начальная загрузка и запуск приложения.
@@ -20,5 +20,5 @@ class InnotechRandomCoffeeApplication
  * @param args аргументы командной строки
  */
 fun main(args: Array<String>) {
-    runApplication<InnotechRandomCoffeeApplication>(*args)
+    runApplication<T1RandomCoffeeApplication>(*args)
 }

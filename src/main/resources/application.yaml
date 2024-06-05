@@ -10,7 +10,7 @@ spring:
       hibernate.globally_quoted_identifiers: true
 
 telegram:
-  name: 'InnotechRandomCoffee'
+  name: 'T1RandomCoffee'
   adminId: 203918552
 
 # UTC time by default

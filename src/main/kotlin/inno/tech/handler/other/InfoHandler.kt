@@ -8,6 +8,7 @@ import inno.tech.model.User
 import inno.tech.service.message.MessageService
 import org.springframework.boot.info.BuildProperties
 import org.springframework.stereotype.Component
+import org.telegram.telegrambots.meta.api.methods.send.SendMessage
 import org.telegram.telegrambots.meta.api.objects.Update
 
 /**
@@ -27,6 +28,9 @@ class InfoHandler(
     }
 
     override fun handle(update: Update, user: User?) {
-        messageService.sendMessage(update.getChatIdAsString(), Message.INFO, arrayOf(buildProperties.version))
+        messageService.sendMessage(update.getChatIdAsString(), Message.INFO, arrayOf(buildProperties.version)) { sendMessage: SendMessage ->
+            sendMessage.disableWebPagePreview()
+            sendMessage
+        }
     }
 }
