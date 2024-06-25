@@ -1,7 +1,7 @@
 # dev use only
 services:
   postgres:
-    image: 'public.ecr.aws/docker/library/postgres:16.3-alpine'
+    image: 'postgres:14.1'
     environment:
       POSTGRES_DB: 'random_coffee'
       POSTGRES_USER: 'random'
