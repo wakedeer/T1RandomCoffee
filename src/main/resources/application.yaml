@@ -15,7 +15,7 @@ telegram:
 
 # UTC time by default
 schedule:
-  invite: '0 0 7 * * SUN'
-  match: '0 0 7 * * MON-SAT'
+  invite: '0 15 7 * * SUN'
+  match: '0 15 7 * * MON-SAT'
   rematch: '0 0 8 * * WED'
   remind: '0 45 6 * * WED'
