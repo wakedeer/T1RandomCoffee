@@ -77,11 +77,10 @@ class SubscriptionService(
     }
 
     fun sendMatchResult(firstUser: User, secondUser: User): Boolean {
-        try {
-            messageService.sendInvitationMessage(firstUser, secondUser)
-            messageService.sendInvitationMessage(secondUser, firstUser)
-        } catch (e: Exception) {
-            log.error("Error occurred sending match message to pair ${firstUser.userId} and ${secondUser.userId}", e)
+        if (!sendMatch(firstUser, secondUser)) {
+            return false
+        }
+        if (!sendMatch(secondUser, firstUser)) {
             return false
         }
 
@@ -91,6 +90,21 @@ class SubscriptionService(
 
         log.debug("Created pair first user id: ${firstUser.userId} and second user id: ${secondUser.userId}")
         return true
+    }
+
+    fun sendMatch(firstUser: User, secondUser: User): Boolean {
+        try {
+            messageService.sendInvitationMessage(firstUser, secondUser)
+            return true
+        } catch (ex: Exception) {
+            if (ex is TelegramApiRequestException && 403 == ex.errorCode) {
+                log.warn("User ${firstUser.userId} unsubscribed from the bot. Deactivate user", ex)
+                firstUser.active = false
+            } else {
+                log.error("Sending a request. Error occurred with user ${firstUser.userId} ", ex)
+            }
+        }
+        return false
     }
 
     @Transactional
