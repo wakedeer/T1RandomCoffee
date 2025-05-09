@@ -53,7 +53,7 @@ class FinishInputProfileHandler(
             val readyUser = userRepository.findAllByStatusInAndActiveTrue(listOf(Status.READY, Status.UNPAIRED)).firstOrNull()
             if (readyUser != null) {
                 // the pair found
-                subscriptionService.sendInvitation(readyUser, user)
+                subscriptionService.sendMatchResult(readyUser, user)
             } else {
                 // a pair hasn't found. add to wait list
                 user.status = Status.READY

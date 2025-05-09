@@ -56,7 +56,7 @@ class SubscriptionService(
                     continue
                 }
             } else {
-                val isSuccess = sendInvitation(firstUser, secondUser)
+                val isSuccess = sendMatchResult(firstUser, secondUser)
                 if (!isSuccess) {
                     collisionCount++
                     continue
@@ -76,7 +76,7 @@ class SubscriptionService(
         log.info("Pair matching is finished successfully")
     }
 
-    fun sendInvitation(firstUser: User, secondUser: User): Boolean {
+    fun sendMatchResult(firstUser: User, secondUser: User): Boolean {
         try {
             messageService.sendInvitationMessage(firstUser, secondUser)
             messageService.sendInvitationMessage(secondUser, firstUser)
