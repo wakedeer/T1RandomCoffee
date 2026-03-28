@@ -1,0 +1,100 @@
+version: '3.9'
+
+x-logging: &default-logging
+  driver: local
+  options:
+    max-file: "3"
+    max-size: "10m"
+
+x-bot-common: &bot-common
+  depends_on:
+    - db
+  restart: unless-stopped
+  cpus: 0.50
+  pids_limit: 128
+  stop_grace_period: 20s
+  logging: *default-logging
+
+services:
+  db:
+    image: 'postgres:14.1'
+    restart: always
+    environment:
+      POSTGRES_DB: 'random_coffee'
+      POSTGRES_USER: ${POSTGRES_USER}
+      PGUSER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      PGDATA: '/var/lib/postgresql/data/pgdata'
+    volumes:
+      - '.:/var/lib/postgresql/data'
+      - './initdb:/docker-entrypoint-initdb.d'
+    ports:
+      - '35432:5432'
+    healthcheck:
+      test: [ 'CMD-SHELL', 'pg_isready -h db' ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
+    logging: *default-logging
+
+  t1-random-coffee-bot:
+    <<: *bot-common
+    image: 'wakedeer/t1randomcoffee:0.2.11'
+    mem_limit: 224m
+    mem_reservation: 160m
+    environment:
+      SPRING_DATASOURCE_USERNAME: ${POSTGRES_USER}
+      SPRING_DATASOURCE_PASSWORD: ${POSTGRES_PASSWORD}
+      SPRING_DATASOURCE_URL: 'jdbc:postgresql://db:5432/random_coffee'
+      TELEGRAM_TOKEN: ${T1_RANDOM_COFFEE_BOT_TOKEN}
+      SPRING_PROFILES_ACTIVE: manual
+      JAVA_TOOL_OPTIONS: >-
+        -XX:InitialRAMPercentage=25.0
+        -XX:MaxRAMPercentage=70.0
+        -XX:+UseSerialGC
+        -XX:MaxMetaspaceSize=96m
+        -XX:+ExitOnOutOfMemoryError
+        -Djava.security.egd=file:/dev/./urandom
+
+  t1-eng-random-coffee-bot:
+    <<: *bot-common
+    image: 'wakedeer/englishrandomcoffee:0.4.10'
+    mem_limit: 192m
+    mem_reservation: 128m
+    environment:
+      SPRING_DATASOURCE_USERNAME: ${POSTGRES_USER}
+      SPRING_DATASOURCE_PASSWORD: ${POSTGRES_PASSWORD}
+      SPRING_DATASOURCE_URL: 'jdbc:postgresql://db:5432/eng_random_coffee'
+      TELEGRAM_NAME: 'InnotechEnglishRandomCoffeeBot'
+      TELEGRAM_TOKEN: ${T1_ENG_RANDOM_COFFEE_BOT_TOKEN}
+      SPRING_PROFILES_ACTIVE: innotech
+      JAVA_TOOL_OPTIONS: >-
+        -XX:InitialRAMPercentage=25.0
+        -XX:MaxRAMPercentage=60.0
+        -XX:+UseSerialGC
+        -XX:MaxMetaspaceSize=96m
+        -XX:+ExitOnOutOfMemoryError
+        -Djava.security.egd=file:/dev/./urandom
+
+  t1-data-random-coffee-bot:
+    <<: *bot-common
+    image: 'wakedeer/t1datarandomcoffee:0.2.19'
+    mem_limit: 224m
+    mem_reservation: 160m
+    environment:
+      SPRING_DATASOURCE_USERNAME: ${POSTGRES_USER}
+      SPRING_DATASOURCE_PASSWORD: ${POSTGRES_PASSWORD}
+      SPRING_DATASOURCE_URL: 'jdbc:postgresql://db:5432/t1_data_random_coffee'
+      TELEGRAM_NAME: 'T1DataRandomCoffeeBot'
+      TELEGRAM_TOKEN: ${T1_DATA_RANDOM_COFFEE_BOT_TOKEN}
+      SPRING_PROFILES_ACTIVE: manual
+      SCHEDULE_INVITE: '0 0 8 * * SUN'
+      SCHEDULE_MATCH: '0 0 8 * * MON'
+      JAVA_TOOL_OPTIONS: >-
+        -XX:InitialRAMPercentage=25.0
+        -XX:MaxRAMPercentage=70.0
+        -XX:+UseSerialGC
+        -XX:MaxMetaspaceSize=96m
+        -XX:+ExitOnOutOfMemoryError
+        -Djava.security.egd=file:/dev/./urandom
