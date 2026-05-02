@@ -15,14 +15,13 @@ import org.telegram.telegrambots.meta.api.objects.Update
 @Component
 class TelegramBotApi(
     private val telegramProperties: TelegramProperties,
-) : TelegramLongPollingBot() {
+) : TelegramLongPollingBot(telegramProperties.token) {
 
     /** Обработчик входящий сообщений. (Lazy для избежания рекурсивной зависимости) */
     @Lazy
     @Autowired
     private lateinit var messageHandler: MessageHandler
 
-    override fun getBotToken() = telegramProperties.token
 
     override fun getBotUsername() = telegramProperties.name
 

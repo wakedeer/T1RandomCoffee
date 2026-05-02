@@ -1,7 +1,6 @@
 package inno.tech
 
 import org.springframework.boot.context.properties.ConfigurationProperties
-import org.springframework.boot.context.properties.ConstructorBinding
 
 /**
  * Конфигурации подключения к Telegram Bot API.
@@ -10,7 +9,6 @@ import org.springframework.boot.context.properties.ConstructorBinding
  * @param adminId идентификатор администратора
  */
 @ConfigurationProperties("telegram")
-@ConstructorBinding
 data class TelegramProperties(
     val name: String,
     val token: String,

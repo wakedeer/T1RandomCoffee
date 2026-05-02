@@ -1,16 +1,17 @@
+import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
-    id("org.springframework.boot") version "2.6.3"
-    id("io.spring.dependency-management") version "1.0.11.RELEASE"
-    kotlin("jvm") version "1.6.10"
-    kotlin("plugin.spring") version "1.6.10"
-    kotlin("plugin.jpa") version "1.6.10"
+    id("org.springframework.boot") version "3.5.14"
+    id("io.spring.dependency-management") version "1.1.7"
+    kotlin("jvm") version "2.3.21"
+    kotlin("plugin.spring") version "2.3.21"
+    kotlin("plugin.jpa") version "2.3.21"
 }
 
 group = "inno.tech"
 version = "0.2.11"
-java.sourceCompatibility = JavaVersion.VERSION_11
+java.sourceCompatibility = JavaVersion.VERSION_25
 
 repositories {
     mavenCentral()
@@ -19,7 +20,10 @@ repositories {
 dependencies {
     //core
     implementation("org.springframework.boot:spring-boot-starter")
-    implementation("org.telegram:telegrambots-spring-boot-starter")
+    implementation("org.telegram:telegrambots:6.9.7.1")
+
+    //support telegrambots
+    compileOnly("org.projectlombok:lombok")
 
     //database
     implementation("org.springframework.boot:spring-boot-starter-data-jpa")
@@ -28,7 +32,6 @@ dependencies {
 
     //kotlin
     implementation("org.jetbrains.kotlin:kotlin-reflect")
-    implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
 
     //logging
     implementation("io.github.microutils:kotlin-logging-jvm")
@@ -39,15 +42,14 @@ dependencies {
 
 dependencyManagement {
     dependencies {
-        dependency("org.telegram:telegrambots-spring-boot-starter:5.7.1")
         dependency("io.github.microutils:kotlin-logging-jvm:2.1.20")
     }
 }
 
 tasks.withType<KotlinCompile> {
-    kotlinOptions {
-        freeCompilerArgs = listOf("-Xjsr305=strict")
-        jvmTarget = "11"
+    compilerOptions {
+        freeCompilerArgs.add("-Xjsr305=strict")
+        jvmTarget.set(JvmTarget.JVM_25)
     }
 }
 
