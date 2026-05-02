@@ -2,25 +2,19 @@ package inno.tech
 
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
-import org.telegram.telegrambots.meta.TelegramBotsApi
-import org.telegram.telegrambots.meta.exceptions.TelegramApiException
-import org.telegram.telegrambots.updatesreceivers.DefaultBotSession
+import org.telegram.telegrambots.client.okhttp.OkHttpTelegramClient
+import org.telegram.telegrambots.meta.generics.TelegramClient
 
 /**
- * Конфигурация регистрации Telegram-бота.
- * Заменяет авторегистрацию из telegrambots-spring-boot-starter,
- * которая использует механизм spring.factories, не поддерживаемый Spring Boot 3.
+ * Конфигурация Telegram-клиента для отправки сообщений.
+ * Регистрация бота выполняется автоматически стартером telegrambots-springboot-longpolling-starter.
  */
 @Configuration
 class TelegramBotConfiguration(
-    private val telegramBotApi: TelegramBotApi,
+    private val telegramProperties: TelegramProperties,
 ) {
 
     @Bean
-    @Throws(TelegramApiException::class)
-    fun telegramBotsApi(): TelegramBotsApi =
-        TelegramBotsApi(DefaultBotSession::class.java).also {
-            it.registerBot(telegramBotApi)
-        }
+    fun telegramClient(): TelegramClient =
+        OkHttpTelegramClient(telegramProperties.token)
 }
-

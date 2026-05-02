@@ -12,6 +12,7 @@ import org.springframework.stereotype.Component
 import org.telegram.telegrambots.meta.api.objects.Update
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKeyboardButton
+import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKeyboardRow
 
 @Component
 class InputNameHandler(
@@ -39,27 +40,22 @@ class InputNameHandler(
         val CITIES = chooseCityBtn()
 
         private fun chooseCityBtn(): InlineKeyboardMarkup {
-            return InlineKeyboardMarkup().apply {
-                keyboard = listOf(
-                    listOf(cityBtn("Москва"), cityBtn("Санкт-Петербург")),
-                    listOf(cityBtn("Новосибирск"), cityBtn("Екатеринбург")),
-                    listOf(cityBtn("Казань"), cityBtn("Самара")),
-                    listOf(cityBtn("Нижний Новгород"), cityBtn("Воронеж")),
-                    listOf(cityBtn("Краснодар"), cityBtn("Тюмень")),
-                    listOf(cityBtn("Ижевск"), cityBtn("Хабаровск")),
-                    listOf(cityBtn("Владивосток"), cityBtn("Томск")),
-                    listOf(cityBtn("Рязань"), cityBtn("Севастополь")),
-                    listOf(cityBtn("Калининград")),
-                )
-            }
+            return InlineKeyboardMarkup.builder()
+                .keyboardRow(InlineKeyboardRow(cityBtn("Москва"), cityBtn("Санкт-Петербург")))
+                .keyboardRow(InlineKeyboardRow(cityBtn("Новосибирск"), cityBtn("Екатеринбург")))
+                .keyboardRow(InlineKeyboardRow(cityBtn("Казань"), cityBtn("Самара")))
+                .keyboardRow(InlineKeyboardRow(cityBtn("Нижний Новгород"), cityBtn("Воронеж")))
+                .keyboardRow(InlineKeyboardRow(cityBtn("Краснодар"), cityBtn("Тюмень")))
+                .keyboardRow(InlineKeyboardRow(cityBtn("Ижевск"), cityBtn("Хабаровск")))
+                .keyboardRow(InlineKeyboardRow(cityBtn("Владивосток"), cityBtn("Томск")))
+                .keyboardRow(InlineKeyboardRow(cityBtn("Рязань"), cityBtn("Севастополь")))
+                .keyboardRow(InlineKeyboardRow(cityBtn("Калининград")))
+                .build()
         }
 
-        private fun cityBtn(city: String): InlineKeyboardButton {
-            val contactPartner = InlineKeyboardButton().apply {
-                text = city
-                callbackData = city
-            }
-            return contactPartner
-        }
+        private fun cityBtn(city: String): InlineKeyboardButton = InlineKeyboardButton.builder()
+            .text(city)
+            .callbackData(city)
+            .build()
     }
 }

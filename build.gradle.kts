@@ -20,10 +20,8 @@ repositories {
 dependencies {
     //core
     implementation("org.springframework.boot:spring-boot-starter")
-    implementation("org.telegram:telegrambots:6.9.7.1")
-
-    //support telegrambots
-    compileOnly("org.projectlombok:lombok")
+    implementation("org.telegram:telegrambots-springboot-longpolling-starter")
+    implementation("org.telegram:telegrambots-client")
 
     //database
     implementation("org.springframework.boot:spring-boot-starter-data-jpa")
@@ -34,7 +32,7 @@ dependencies {
     implementation("org.jetbrains.kotlin:kotlin-reflect")
 
     //logging
-    implementation("io.github.microutils:kotlin-logging-jvm")
+    implementation("io.github.oshai:kotlin-logging-jvm")
 
     //test
     testImplementation("org.springframework.boot:spring-boot-starter-test")
@@ -42,7 +40,9 @@ dependencies {
 
 dependencyManagement {
     dependencies {
-        dependency("io.github.microutils:kotlin-logging-jvm:2.1.20")
+        dependency("org.telegram:telegrambots-springboot-longpolling-starter:9.5.0")
+        dependency("org.telegram:telegrambots-client:9.5.0")
+        dependency("io.github.oshai:kotlin-logging-jvm:7.0.3")
     }
 }
 

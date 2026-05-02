@@ -8,12 +8,13 @@ import inno.tech.model.User
 import inno.tech.repository.MeetingRepository
 import inno.tech.repository.UserRepository
 import inno.tech.service.message.MessageService
-import mu.KotlinLogging
+import io.github.oshai.kotlinlogging.KotlinLogging
 import org.springframework.scheduling.annotation.Scheduled
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKeyboardButton
+import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKeyboardRow
 import org.telegram.telegrambots.meta.exceptions.TelegramApiRequestException
 
 /**
@@ -35,7 +36,7 @@ class SubscriptionService(
     @Transactional
     @Scheduled(cron = "\${schedule.match}")
     fun matchPairs() {
-        log.info("Pair matching is started")
+        log.info { "Pair matching is started" }
         val participants = userRepository.findAllByStatusAndActiveTrue(Status.READY)
 
         var collisionCount = 0
@@ -73,7 +74,7 @@ class SubscriptionService(
             sendFailure(u, Message.MATCH_FAILURE_ODD)
             u.status = Status.UNPAIRED
         }
-        log.info("Pair matching is finished successfully")
+        log.info { "Pair matching is finished successfully" }
     }
 
     fun sendMatchResult(firstUser: User, secondUser: User): Boolean {
@@ -88,7 +89,7 @@ class SubscriptionService(
         secondUser.status = Status.MATCHED
         meetingRepository.save(Meeting(userId1 = firstUser.userId, userId2 = secondUser.userId))
 
-        log.debug("Created pair first user id: ${firstUser.userId} and second user id: ${secondUser.userId}")
+        log.debug { "Created pair first user id: ${firstUser.userId} and second user id: ${secondUser.userId}" }
         return true
     }
 
@@ -98,10 +99,10 @@ class SubscriptionService(
             return true
         } catch (ex: Exception) {
             if (ex is TelegramApiRequestException && 403 == ex.errorCode) {
-                log.warn("User ${firstUser.userId} unsubscribed from the bot. Deactivate user", ex)
+                log.warn(ex) { "User ${firstUser.userId} unsubscribed from the bot. Deactivate user" }
                 firstUser.active = false
             } else {
-                log.error("Sending a request. Error occurred with user ${firstUser.userId} ", ex)
+                log.error(ex) { "Sending a request. Error occurred with user ${firstUser.userId} " }
             }
         }
         return false
@@ -110,7 +111,7 @@ class SubscriptionService(
     @Transactional
     @Scheduled(cron = "\${schedule.invite}")
     fun sendInvitation() {
-        log.info("Invention sending is started")
+        log.info { "Invention sending is started" }
         val invitationGroup = listOf(Status.MATCHED, Status.ASKED, Status.UNPAIRED, Status.SKIP)
         val participants = userRepository.findAllByStatusInAndActiveTrue(invitationGroup)
         participants.forEach { participant: User ->
@@ -119,10 +120,10 @@ class SubscriptionService(
                 messageService.sendMessageWithKeyboard(participant.chatId.toString(), SUGGESTION_MENU, Message.MATCH_SUGGESTION)
             } catch (ex: Exception) {
                 if (ex is TelegramApiRequestException && 403 == ex.errorCode) {
-                    log.warn("User ${participant.userId} unsubscribed from the bot. Deactivate user", ex)
+                    log.warn(ex) { "User ${participant.userId} unsubscribed from the bot. Deactivate user" }
                     participant.active = false
                 } else {
-                    log.error("Sending a request. Error occurred with user ${participant.userId} ", ex)
+                    log.error(ex) { "Sending a request. Error occurred with user ${participant.userId} " }
                 }
             }
         }
@@ -144,7 +145,7 @@ class SubscriptionService(
         try {
             messageService.sendMessage(user.userId.toString(), reason)
         } catch (ex: Exception) {
-            log.error("Sending a cause of invitation failure. Error occurred with user ${user.userId} ", ex)
+            log.error(ex) { "Sending a cause of invitation failure. Error occurred with user ${user.userId} " }
         }
     }
 
@@ -161,17 +162,17 @@ class SubscriptionService(
 
         /** Меню выбора участия в жеребьёвке. */
         val SUGGESTION_MENU = run {
-            val infoBtn = InlineKeyboardButton().apply {
-                text = READY_MESSAGE
-                callbackData = Command.READY.command
-            }
-            val showProfileBtn = InlineKeyboardButton().apply {
-                text = SKIP_MESSAGE
-                callbackData = Command.SKIP.command
-            }
-            InlineKeyboardMarkup().apply {
-                keyboard = listOf(listOf(infoBtn, showProfileBtn))
-            }
+            val infoBtn = InlineKeyboardButton.builder()
+                .text(READY_MESSAGE)
+                .callbackData(Command.READY.command)
+                .build()
+            val showProfileBtn = InlineKeyboardButton.builder()
+                .text(SKIP_MESSAGE)
+                .callbackData(Command.SKIP.command)
+                .build()
+            InlineKeyboardMarkup.builder()
+                .keyboardRow(InlineKeyboardRow(infoBtn, showProfileBtn))
+                .build()
         }
     }
 }

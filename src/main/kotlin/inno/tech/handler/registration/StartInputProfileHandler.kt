@@ -17,6 +17,7 @@ import org.springframework.stereotype.Component
 import org.telegram.telegrambots.meta.api.objects.Update
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKeyboardButton
+import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKeyboardRow
 
 /**
  * Обработчик регистрации/перерегистрации пользователя.
@@ -72,15 +73,13 @@ class StartInputProfileHandler(
      * @return клавиатура с именем и фамилией
      */
     private fun createSuggestedNameKeyboard(fullName: String): InlineKeyboardMarkup {
-        val suggestedNameBtn = InlineKeyboardButton().apply {
-            text = fullName
-            callbackData = fullName
-        }
-        return InlineKeyboardMarkup().apply {
-            this.keyboard = listOf(
-                listOf(suggestedNameBtn),
-            )
-        }
+        val suggestedNameBtn = InlineKeyboardButton.builder()
+            .text(fullName)
+            .callbackData(fullName)
+            .build()
+        return InlineKeyboardMarkup.builder()
+            .keyboardRow(InlineKeyboardRow(suggestedNameBtn))
+            .build()
     }
 
     /**
@@ -95,7 +94,7 @@ class StartInputProfileHandler(
             else -> return null
         }
 
-        val firstName = userInfo.firstName.let { "$it " }
+        val firstName = "${userInfo.firstName} "
         val lastName = userInfo.lastName ?: ""
         return firstName + lastName
     }
