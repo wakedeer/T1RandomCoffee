@@ -127,6 +127,7 @@ class SubscriptionService(
                 }
             }
         }
+        log.info { "Invention sending is started has finished" }
     }
 
     private fun findIndexes(userIndexes: IntRange): Pair<Int, Int> {
