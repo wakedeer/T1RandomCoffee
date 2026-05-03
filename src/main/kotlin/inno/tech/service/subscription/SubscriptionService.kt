@@ -16,6 +16,7 @@ import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMa
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKeyboardButton
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKeyboardRow
 import org.telegram.telegrambots.meta.exceptions.TelegramApiRequestException
+import java.time.LocalDateTime
 
 /**
  * Сервис для рассылки уведомлений пользователем по расписанию.
@@ -40,13 +41,14 @@ class SubscriptionService(
         val participants = userRepository.findAllByStatusAndActiveTrue(Status.READY)
 
         var collisionCount = 0
+        val fromDate = LocalDateTime.now().minusMonths(6)
         while (participants.count() > 1) {
             val (firstUserIndex, secondUserIndex) = findIndexes(0 until participants.count())
 
             val firstUser = participants[firstUserIndex]
             val secondUser = participants[secondUserIndex]
 
-            if (meetingRepository.existsMeeting(firstUser.userId, secondUser.userId)) {
+            if (meetingRepository.existsMeetingAfter(firstUser.userId, secondUser.userId, fromDate)) {
                 if (collisionCount > MAX_ATTEMPT) {
                     sendFailure(firstUser, Message.MATCH_FAILURE)
                     sendFailure(secondUser, Message.MATCH_FAILURE)
