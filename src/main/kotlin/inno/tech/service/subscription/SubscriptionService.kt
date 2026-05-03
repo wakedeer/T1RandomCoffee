@@ -61,6 +61,7 @@ class SubscriptionService(
             } else {
                 val isSuccess = sendMatchResult(firstUser, secondUser)
                 if (!isSuccess) {
+                    participants.removeIf { !it.active } // Убираем деактивированных — они больше не могут участвовать
                     collisionCount++
                     continue
                 }
@@ -84,13 +85,13 @@ class SubscriptionService(
             return false
         }
         if (!sendMatch(secondUser, firstUser)) {
+            log.warn { "User ${firstUser.userId} already received match notification, but match failed for ${secondUser.userId}" }
             return false
         }
 
         firstUser.status = Status.MATCHED
         secondUser.status = Status.MATCHED
         meetingRepository.save(Meeting(userId1 = firstUser.userId, userId2 = secondUser.userId))
-
         log.debug { "Created pair first user id: ${firstUser.userId} and second user id: ${secondUser.userId}" }
         return true
     }
