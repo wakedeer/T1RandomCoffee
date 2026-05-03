@@ -49,7 +49,7 @@ class SubscriptionService(
             val secondUser = participants[secondUserIndex]
 
             if (meetingRepository.existsMeetingAfter(firstUser.userId, secondUser.userId, fromDate)) {
-                if (collisionCount > MAX_ATTEMPT) {
+                if (collisionCount >= MAX_ATTEMPT) {
                     sendFailure(firstUser, Message.MATCH_FAILURE)
                     sendFailure(secondUser, Message.MATCH_FAILURE)
                     firstUser.status = Status.UNPAIRED
