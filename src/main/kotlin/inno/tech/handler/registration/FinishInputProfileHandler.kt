@@ -53,9 +53,10 @@ class FinishInputProfileHandler(
             val readyUser = userRepository.findAllByStatusInAndActiveTrue(listOf(Status.READY, Status.UNPAIRED)).firstOrNull()
             if (readyUser != null) {
                 // the pair found
-                //TODO нужно исправить гипотетическую ошибку, что у другого пользователя нет доступа и мы не смогли отправить ему приглашение
-                // здесь бага в том, что пользователь может застрять в статусе SUCCESSFUL_SIGN_UP
-                subscriptionService.sendMatchResult(readyUser, user)
+                val isSuccess = subscriptionService.sendMatchResult(readyUser, user)
+                if (!isSuccess) {
+                    user.status = Status.READY
+                }
             } else {
                 // a pair hasn't found. add to wait list
                 user.status = Status.READY

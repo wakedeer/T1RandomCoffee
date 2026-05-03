@@ -165,7 +165,7 @@ class SubscriptionService(
         private const val SKIP_MESSAGE = "Пропущу неделю"
 
         /** Меню выбора участия в жеребьёвке. */
-        val SUGGESTION_MENU = run {
+        val SUGGESTION_MENU: InlineKeyboardMarkup = run {
             val infoBtn = InlineKeyboardButton.builder()
                 .text(READY_MESSAGE)
                 .callbackData(Command.READY.command)
