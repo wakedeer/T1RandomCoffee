@@ -1,7 +1,10 @@
 package inno.tech.model
 
+import inno.tech.constant.MeetingFormat
 import jakarta.persistence.Column
 import jakarta.persistence.Entity
+import jakarta.persistence.EnumType
+import jakarta.persistence.Enumerated
 import jakarta.persistence.GeneratedValue
 import jakarta.persistence.GenerationType
 import jakarta.persistence.Id
@@ -31,4 +34,9 @@ class Meeting(
     /** Время создания записи (Время жеребьёвки) */
     @Column(name = "MATCH_DATE")
     var matchDate: LocalDateTime = LocalDateTime.now(),
+
+    /** Формат встречи */
+    @Enumerated(EnumType.STRING)
+    @Column(name = "MEETING_FORMAT")
+    var meetingFormat: MeetingFormat = MeetingFormat.ONLINE,
 )

@@ -1,5 +1,6 @@
 package inno.tech.model
 
+import inno.tech.constant.MeetingFormat
 import inno.tech.constant.Status
 import jakarta.persistence.Column
 import jakarta.persistence.Entity
@@ -58,4 +59,9 @@ class User(
     /** Дата регистрации пользователя */
     @Column(name = "REG_DATE")
     var regDate: LocalDateTime = LocalDateTime.now(),
+
+    /** Формат встречи на текущую неделю (сбрасывается при новом цикле приглашений) */
+    @Enumerated(EnumType.STRING)
+    @Column(name = "MEETING_FORMAT")
+    var meetingFormat: MeetingFormat? = null,
 )

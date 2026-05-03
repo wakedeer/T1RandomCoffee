@@ -22,6 +22,8 @@ object Message {
     val READY_TO_MATCH: String = loadTemplate("/message/match/success.md")
     val MATCH_FAILURE: String = loadTemplate("/message/match/failure.md")
     val MATCH_FAILURE_ODD: String = loadTemplate("/message/match/failure_odd.md")
+    val MATCH_CHOOSE_FORMAT: String = loadTemplate("/message/match/choose_format.md")
+    val MATCH_FAILURE_OFFLINE: String = loadTemplate("/message/match/failure_offline.md")
 
     val STATUS_PAUSE: String = loadTemplate("/message/status/pause.md")
     val STATUS_RESUME: String = loadTemplate("/message/status/resume.md")

@@ -2,6 +2,7 @@ package inno.tech.service.subscription
 
 import inno.tech.constant.Command
 import inno.tech.constant.Message
+import inno.tech.constant.MeetingFormat
 import inno.tech.constant.Status
 import inno.tech.model.Meeting
 import inno.tech.model.User
@@ -39,12 +40,39 @@ class SubscriptionService(
     fun matchPairs() {
         log.info { "Pair matching is started" }
         val participants = userRepository.findAllByStatusAndActiveTrue(Status.READY)
-
-        var collisionCount = 0
         val fromDate = LocalDateTime.now().minusMonths(6)
+
+        // 1. Матчим офлайн-участников внутри каждого города
+        val offlineParticipants = participants.filter { it.meetingFormat == MeetingFormat.OFFLINE }.toMutableList()
+        val byCity = offlineParticipants.groupBy { it.city }
+        byCity.forEach { (city, cityGroup) ->
+            val cityParticipants = cityGroup.toMutableList()
+            matchGroup(cityParticipants, fromDate)
+            // Нечётные офлайн-участники, которым не нашлась пара в городе — переводим в онлайн-пул
+            cityParticipants.forEach { u ->
+                log.info { "No offline pair found in city '$city' for user ${u.userId}. Falling back to online." }
+                sendFailure(u, Message.MATCH_FAILURE_OFFLINE)
+                u.meetingFormat = MeetingFormat.ONLINE
+            }
+            participants.removeAll(cityGroup.toSet())
+            participants.addAll(cityParticipants) // добавляем упавших обратно в общий пул
+        }
+
+        // 2. Матчим оставшихся (онлайн + упавшие из офлайна) случайно
+        matchGroup(participants, fromDate)
+
+        // 3. Нечётные без пары
+        participants.forEach { u: User ->
+            sendFailure(u, Message.MATCH_FAILURE_ODD)
+            u.status = Status.UNPAIRED
+        }
+        log.info { "Pair matching is finished successfully" }
+    }
+
+    private fun matchGroup(participants: MutableList<User>, fromDate: LocalDateTime) {
+        var collisionCount = 0
         while (participants.count() > 1) {
             val (firstUserIndex, secondUserIndex) = findIndexes(0 until participants.count())
-
             val firstUser = participants[firstUserIndex]
             val secondUser = participants[secondUserIndex]
 
@@ -54,30 +82,24 @@ class SubscriptionService(
                     sendFailure(secondUser, Message.MATCH_FAILURE)
                     firstUser.status = Status.UNPAIRED
                     secondUser.status = Status.UNPAIRED
+                    collisionCount = 0
+                    participants.remove(firstUser)
+                    participants.remove(secondUser)
                 } else {
                     collisionCount++
-                    continue
                 }
             } else {
                 val isSuccess = sendMatchResult(firstUser, secondUser)
                 if (!isSuccess) {
-                    participants.removeIf { !it.active } // Убираем деактивированных — они больше не могут участвовать
+                    participants.removeIf { !it.active }
                     collisionCount++
                     continue
                 }
+                collisionCount = 0
+                participants.remove(firstUser)
+                participants.remove(secondUser)
             }
-
-            collisionCount = 0
-            participants.remove(firstUser)
-            participants.remove(secondUser)
         }
-
-        // set unscheduled status for other
-        participants.forEach { u: User ->
-            sendFailure(u, Message.MATCH_FAILURE_ODD)
-            u.status = Status.UNPAIRED
-        }
-        log.info { "Pair matching is finished successfully" }
     }
 
     fun sendMatchResult(firstUser: User, secondUser: User): Boolean {
@@ -91,7 +113,12 @@ class SubscriptionService(
 
         firstUser.status = Status.MATCHED
         secondUser.status = Status.MATCHED
-        meetingRepository.save(Meeting(userId1 = firstUser.userId, userId2 = secondUser.userId))
+        val meetingFormat = if (firstUser.meetingFormat == MeetingFormat.OFFLINE && secondUser.meetingFormat == MeetingFormat.OFFLINE) {
+            MeetingFormat.OFFLINE
+        } else {
+            MeetingFormat.ONLINE
+        }
+        meetingRepository.save(Meeting(userId1 = firstUser.userId, userId2 = secondUser.userId, meetingFormat = meetingFormat))
         log.debug { "Created pair first user id: ${firstUser.userId} and second user id: ${secondUser.userId}" }
         return true
     }
@@ -119,6 +146,7 @@ class SubscriptionService(
         val participants = userRepository.findAllByStatusInAndActiveTrue(invitationGroup)
         participants.forEach { participant: User ->
             participant.status = Status.ASKED
+            participant.meetingFormat = null  // сбрасываем формат предыдущей недели
             try {
                 messageService.sendMessageWithKeyboard(participant.chatId.toString(), SUGGESTION_MENU, Message.MATCH_SUGGESTION)
             } catch (ex: Exception) {
@@ -143,7 +171,6 @@ class SubscriptionService(
 
         return Pair(firstUserIndex, secondUserIndex)
     }
-
 
     private fun sendFailure(user: User, reason: String) {
         try {

@@ -1,0 +1,28 @@
+databaseChangeLog:
+  - changeSet:
+      id: 1.0.2-update-db
+      author: amironov
+      changes:
+        - addColumn:
+            tableName: USERS
+            columns:
+              - column:
+                  name: MEETING_FORMAT
+                  type: varchar(10)
+                  constraints:
+                    nullable: true
+        - addColumn:
+            tableName: MEETINGS
+            columns:
+              - column:
+                  name: MEETING_FORMAT
+                  type: varchar(10)
+                  constraints:
+                    nullable: true
+        - sql:
+            sql: "UPDATE meetings SET meeting_format = 'ONLINE' WHERE meeting_format IS NULL"
+        - addNotNullConstraint:
+            tableName: MEETINGS
+            columnName: MEETING_FORMAT
+            columnDataType: varchar(10)
+

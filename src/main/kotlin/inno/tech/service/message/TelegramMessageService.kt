@@ -1,6 +1,7 @@
 package inno.tech.service.message
 
 import inno.tech.constant.Command
+import inno.tech.constant.MeetingFormat
 import inno.tech.constant.Message
 import inno.tech.model.User
 import org.springframework.stereotype.Service
@@ -55,8 +56,9 @@ class TelegramMessageService(
         val profileUrl = partner.profileUrl ?: DATA_IS_NOT_DEFINED
         val fullName = partner.fullName ?: DATA_IS_NOT_DEFINED
         val city = partner.city ?: DATA_IS_NOT_DEFINED
+        val format = (user.meetingFormat ?: MeetingFormat.ONLINE).displayName
 
-        sendMessageWithKeyboard(user.chatId.toString(), contactPartnerBtn(partner), Message.MATCH_INVITATION, arrayOf(fullName, city, profileUrl))
+        sendMessageWithKeyboard(user.chatId.toString(), contactPartnerBtn(partner), Message.MATCH_INVITATION, arrayOf(fullName, city, profileUrl, format))
     }
 
     private fun contactPartnerBtn(partner: User): InlineKeyboardMarkup {

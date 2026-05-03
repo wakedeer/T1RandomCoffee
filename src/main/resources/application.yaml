@@ -12,6 +12,11 @@ telegram:
   name: 'T1RandomCoffee'
   adminId: 203918552
 
+offline:
+  cities:
+    - 'Москва'
+    - 'Санкт-Петербург'
+
 # UTC time by default
 schedule:
   invite: '0 0 7 * * SUN'
