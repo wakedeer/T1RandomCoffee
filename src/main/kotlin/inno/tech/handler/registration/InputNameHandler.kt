@@ -42,14 +42,14 @@ class InputNameHandler(
         private fun chooseCityBtn(): InlineKeyboardMarkup {
             return InlineKeyboardMarkup.builder()
                 .keyboardRow(InlineKeyboardRow(cityBtn("Москва"), cityBtn("Санкт-Петербург")))
-                .keyboardRow(InlineKeyboardRow(cityBtn("Новосибирск"), cityBtn("Екатеринбург")))
-                .keyboardRow(InlineKeyboardRow(cityBtn("Казань"), cityBtn("Самара")))
-                .keyboardRow(InlineKeyboardRow(cityBtn("Нижний Новгород"), cityBtn("Воронеж")))
-                .keyboardRow(InlineKeyboardRow(cityBtn("Краснодар"), cityBtn("Тюмень")))
+                .keyboardRow(InlineKeyboardRow(cityBtn("Екатеринбург"), cityBtn("Новосибирск")))
+                .keyboardRow(InlineKeyboardRow(cityBtn("Нижний Новгород"), cityBtn("Рязань")))
+                .keyboardRow(InlineKeyboardRow(cityBtn("Тверь"), cityBtn("Томск")))
+                .keyboardRow(InlineKeyboardRow(cityBtn("Казань"), cityBtn("Уфа")))
+                .keyboardRow(InlineKeyboardRow(cityBtn("Самара"), cityBtn("Чебоксары")))
+                .keyboardRow(InlineKeyboardRow(cityBtn("Воронеж"), cityBtn("Краснодар")))
                 .keyboardRow(InlineKeyboardRow(cityBtn("Ижевск"), cityBtn("Хабаровск")))
-                .keyboardRow(InlineKeyboardRow(cityBtn("Владивосток"), cityBtn("Томск")))
-                .keyboardRow(InlineKeyboardRow(cityBtn("Рязань"), cityBtn("Севастополь")))
-                .keyboardRow(InlineKeyboardRow(cityBtn("Калининград")))
+                .keyboardRow(InlineKeyboardRow(cityBtn("Калининград"), cityBtn("Минск")))
                 .build()
         }
 
