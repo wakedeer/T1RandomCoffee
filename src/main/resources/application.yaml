@@ -21,3 +21,5 @@ offline:
 schedule:
   invite: '0 0 7 * * SUN'
   match: '0 0 7 * * MON'
+  rematch: '0 0 7 * * WED'
+  offline-rematch-fallback: '0 0 9 * * THU,FRI'

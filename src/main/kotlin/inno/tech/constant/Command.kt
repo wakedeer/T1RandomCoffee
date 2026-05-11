@@ -39,4 +39,10 @@ enum class Command(val command: String) {
 
     /** Пропуск участия в жеребьёвке */
     SKIP("/skip"),
+
+    /** Пользователь доволен встречей — реманч не нужен */
+    SKIP_REMATCH("/skip_rematch"),
+
+    /** Пользователь не получил ответа от партнёра — запрос нового собеседника */
+    REQUEST_REMATCH("/request_rematch"),
 }

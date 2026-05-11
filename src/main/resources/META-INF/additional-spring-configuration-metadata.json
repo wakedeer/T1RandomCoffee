@@ -11,6 +11,16 @@
       "description": "Time to ask about participation."
     },
     {
+      "name": "schedule.rematch",
+      "type": "java.lang.String",
+      "description": "Time to ask about rematch."
+    },
+    {
+      "name": "schedule.offline-rematch-fallback",
+      "type": "java.lang.String",
+      "description": "Time to retry pairing for remaining READY users (Thu, Fri). Offline users paired outside their city get an apology."
+    },
+    {
       "name": "telegram.name",
       "type": "java.lang.String",
       "description": "Bot name."

@@ -1,5 +1,6 @@
 package inno.tech.repository
 
+import inno.tech.constant.MeetingFormat
 import inno.tech.constant.Status
 import inno.tech.model.User
 import org.springframework.data.repository.CrudRepository
@@ -23,4 +24,17 @@ interface UserRepository : CrudRepository<User, Long> {
      * @return список активных пользователей
      */
     fun findAllByStatusAndActiveTrue(status: Status): LinkedList<User>
+
+    /**
+     * Возвращает список активных пользователей с определённым статусом, форматом встречи и городом
+     * @param status статус
+     * @param meetingFormat формат встречи
+     * @param city город
+     * @return список активных пользователей
+     */
+    fun findAllByStatusAndMeetingFormatAndCityAndActiveTrue(
+        status: Status,
+        meetingFormat: MeetingFormat,
+        city: String,
+    ): LinkedList<User>
 }

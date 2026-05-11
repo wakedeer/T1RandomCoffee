@@ -25,6 +25,10 @@ object Message {
     val MATCH_CHOOSE_FORMAT: String = loadTemplate("/message/match/choose_format.md")
     val MATCH_FAILURE_OFFLINE: String = loadTemplate("/message/match/failure_offline.md")
 
+    val REMATCH_SUGGESTION: String = loadTemplate("/message/match/rematch_suggestion.md")
+    val REMATCH_SKIP: String = loadTemplate("/message/match/rematch_skip.md")
+    val REMATCH_SEARCH: String = loadTemplate("/message/match/rematch_search.md")
+
     val STATUS_PAUSE: String = loadTemplate("/message/status/pause.md")
     val STATUS_RESUME: String = loadTemplate("/message/status/resume.md")
 

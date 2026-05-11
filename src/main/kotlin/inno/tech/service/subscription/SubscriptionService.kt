@@ -139,10 +139,44 @@ class SubscriptionService(
     }
 
     @Transactional
+    @Scheduled(cron = "\${schedule.rematch}")
+    fun rematch() {
+        log.info { "Rematch sending is started" }
+        val participants = userRepository.findAllByStatusAndActiveTrue(Status.MATCHED)
+        participants.forEach { participant ->
+            participant.status = Status.SUGGEST_REMATCH
+            try {
+                messageService.sendMessageWithKeyboard(participant.chatId.toString(), REMATCH_MENU, Message.REMATCH_SUGGESTION)
+            } catch (ex: Exception) {
+                if (ex is TelegramApiRequestException && 403 == ex.errorCode) {
+                    log.warn(ex) { "User ${participant.userId} unsubscribed from the bot. Deactivate user" }
+                    participant.active = false
+                } else {
+                    log.error(ex) { "Sending a request. Error occurred with user ${participant.userId}" }
+                }
+            }
+        }
+        log.info { "Rematch sending is finished" }
+    }
+
+    /**
+     * Повторно запускает полный цикл матчинга для всех READY-пользователей:
+     * офлайн внутри городов, затем фолбэк на онлайн для оставшихся.
+     */
+    @Transactional
+    @Scheduled(cron = "\${schedule.offline-rematch-fallback}")
+    fun retryOfflineRematchWithFallback() {
+        log.info { "Retry matching for remaining READY users is started" }
+        matchPairs()
+        log.info { "Retry matching for remaining READY users is finished" }
+    }
+
+
+    @Transactional
     @Scheduled(cron = "\${schedule.invite}")
     fun sendInvitation() {
         log.info { "Invention sending is started" }
-        val invitationGroup = listOf(Status.MATCHED, Status.ASKED, Status.UNPAIRED, Status.SKIP)
+        val invitationGroup = listOf(Status.MATCHED, Status.ASKED, Status.UNPAIRED, Status.SKIP, Status.CHOOSING_FORMAT, Status.SUGGEST_REMATCH)
         val participants = userRepository.findAllByStatusInAndActiveTrue(invitationGroup)
         participants.forEach { participant: User ->
             participant.status = Status.ASKED
@@ -203,6 +237,27 @@ class SubscriptionService(
                 .build()
             InlineKeyboardMarkup.builder()
                 .keyboardRow(InlineKeyboardRow(infoBtn, showProfileBtn))
+                .build()
+        }
+
+        /** Сообщение, что партнёры договорились. */
+        private const val OK_MESSAGE = "Да, всё хорошо ✅"
+
+        /** Сообщение, что партнёр не ответил. */
+        private const val NO_RESPONSE_MESSAGE = "Нет ответа 🔄"
+
+        /** Меню опроса об успехе встречи в середине недели. */
+        val REMATCH_MENU: InlineKeyboardMarkup = run {
+            val okBtn = InlineKeyboardButton.builder()
+                .text(OK_MESSAGE)
+                .callbackData(Command.SKIP_REMATCH.command)
+                .build()
+            val noResponseBtn = InlineKeyboardButton.builder()
+                .text(NO_RESPONSE_MESSAGE)
+                .callbackData(Command.REQUEST_REMATCH.command)
+                .build()
+            InlineKeyboardMarkup.builder()
+                .keyboardRow(InlineKeyboardRow(okBtn, noResponseBtn))
                 .build()
         }
     }
