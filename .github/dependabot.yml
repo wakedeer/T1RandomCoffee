@@ -14,3 +14,11 @@ updates:
     commit-message:
       prefix: "deps"
       include: "scope"
+    groups:
+      gradle-minor-patch:
+        applies-to: version-updates
+        patterns:
+          - "*"
+        update-types:
+          - "minor"
+          - "patch"
