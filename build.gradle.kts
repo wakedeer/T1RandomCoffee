@@ -40,8 +40,8 @@ dependencies {
 
 dependencyManagement {
     dependencies {
-        dependency("org.telegram:telegrambots-springboot-longpolling-starter:9.5.0")
-        dependency("org.telegram:telegrambots-client:9.5.0")
+        dependency("org.telegram:telegrambots-springboot-longpolling-starter:10.0.0")
+        dependency("org.telegram:telegrambots-client:10.0.0")
         dependency("io.github.oshai:kotlin-logging-jvm:7.0.3")
     }
 }
