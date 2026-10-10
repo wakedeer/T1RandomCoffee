@@ -28,7 +28,8 @@ class InfoHandler(
     }
 
     override fun handle(update: Update, user: User?) {
-        messageService.sendMessage(update.getChatIdAsString(), Message.INFO, arrayOf(buildProperties.version)) { sendMessage: SendMessage ->
+        val version = requireNotNull(buildProperties.version) { "Build version is not configured" }
+        messageService.sendMessage(update.getChatIdAsString(), Message.INFO, arrayOf(version)) { sendMessage: SendMessage ->
             sendMessage.disableWebPagePreview()
             sendMessage
         }

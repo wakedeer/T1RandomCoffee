@@ -15,16 +15,16 @@ x-bot-common: &bot-common
 
 services:
   db:
-    image: 'postgres:16.4'
+    image: 'postgres:18.6'
     restart: always
     environment:
       POSTGRES_DB: 'random_coffee'
       POSTGRES_USER: ${POSTGRES_USER}
       PGUSER: ${POSTGRES_USER}
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
-      PGDATA: '/var/lib/postgresql/data/pgdata'
+      PGDATA: '/var/lib/postgresql/18/docker'
     volumes:
-      - '.:/var/lib/postgresql/data'
+      - './pgdata:/var/lib/postgresql'
       - './initdb:/docker-entrypoint-initdb.d'
     ports:
       - '45432:5432'

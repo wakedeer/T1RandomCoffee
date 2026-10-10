@@ -5,3 +5,5 @@ databaseChangeLog:
       file: db/changelog/1.0.1-update-db.yaml
   - include:
       file: db/changelog/1.0.2-update-db.yaml
+  - include:
+      file: db/changelog/1.0.3-update-db.yaml

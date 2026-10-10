@@ -5,8 +5,8 @@ spring:
     username: 'random'
     password: 'coffee2022!'
   jpa:
-    properties:
-      hibernate.globally_quoted_identifiers: true
+    hibernate:
+      ddl-auto: validate
 
 telegram:
   name: 'T1RandomCoffee'

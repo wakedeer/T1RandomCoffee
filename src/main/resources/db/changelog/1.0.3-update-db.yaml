@@ -1,0 +1,9 @@
+databaseChangeLog:
+  - changeSet:
+      id: 1.0.3-update-meeting-id
+      author: amironov
+      changes:
+        - modifyDataType:
+            tableName: MEETINGS
+            columnName: ID
+            newDataType: bigint

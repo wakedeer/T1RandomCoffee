@@ -1,17 +1,30 @@
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
-import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
-    id("org.springframework.boot") version "3.5.14"
+    id("org.springframework.boot") version "4.1.1"
     id("io.spring.dependency-management") version "1.1.7"
-    kotlin("jvm") version "2.3.21"
-    kotlin("plugin.spring") version "2.3.21"
-    kotlin("plugin.jpa") version "2.3.21"
+    id("io.github.ben-manes.versions") version "0.65.0"
+    kotlin("jvm") version "2.4.21"
+    kotlin("plugin.spring") version "2.4.21"
+    kotlin("plugin.jpa") version "2.4.21"
 }
 
 group = "inno.tech"
 version = "0.3.2"
-java.sourceCompatibility = JavaVersion.VERSION_25
+java {
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(25)
+    }
+}
+
+kotlin {
+    jvmToolchain(25)
+    compilerOptions {
+        freeCompilerArgs.add("-Xjsr305=strict")
+        jvmTarget.set(JvmTarget.JVM_25)
+        javaParameters.set(true)
+    }
+}
 
 repositories {
     mavenCentral()
@@ -20,37 +33,24 @@ repositories {
 dependencies {
     //core
     implementation("org.springframework.boot:spring-boot-starter")
-    implementation("org.telegram:telegrambots-springboot-longpolling-starter")
-    implementation("org.telegram:telegrambots-client")
+    implementation("org.telegram:telegrambots-springboot-longpolling-starter:10.3.0")
+    implementation("org.telegram:telegrambots-client:10.3.0")
 
     //database
     implementation("org.springframework.boot:spring-boot-starter-data-jpa")
-    implementation("org.liquibase:liquibase-core")
-    runtimeOnly("org.postgresql:postgresql")
+    implementation("org.springframework.boot:spring-boot-starter-liquibase")
+    implementation("org.liquibase:liquibase-core:5.0.4")
+    runtimeOnly("org.postgresql:postgresql:42.7.14")
 
     //kotlin
     implementation("org.jetbrains.kotlin:kotlin-reflect")
 
     //logging
-    implementation("io.github.oshai:kotlin-logging-jvm")
+    implementation("io.github.oshai:kotlin-logging-jvm:8.0.4")
 
     //test
+    testImplementation(platform("org.junit:junit-bom:6.1.3"))
     testImplementation("org.springframework.boot:spring-boot-starter-test")
-}
-
-dependencyManagement {
-    dependencies {
-        dependency("org.telegram:telegrambots-springboot-longpolling-starter:9.5.0")
-        dependency("org.telegram:telegrambots-client:9.5.0")
-        dependency("io.github.oshai:kotlin-logging-jvm:7.0.3")
-    }
-}
-
-tasks.withType<KotlinCompile> {
-    compilerOptions {
-        freeCompilerArgs.add("-Xjsr305=strict")
-        jvmTarget.set(JvmTarget.JVM_25)
-    }
 }
 
 tasks.withType<Test> {
